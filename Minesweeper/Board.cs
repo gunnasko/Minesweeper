@@ -26,7 +26,13 @@ namespace Minesweeper
 
         public void FillPoints()
         {
+            //TODO: Create unit test for board.
+            
+        }
 
+        public IEnumerable<Point> GetPoints()
+        {
+            return points;
         }
     }
 }

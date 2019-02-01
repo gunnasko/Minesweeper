@@ -6,16 +6,29 @@ using System.Threading.Tasks;
 
 namespace Minesweeper
 {
-    public struct Coordinate
+    public struct Coordinate : IComparable<Coordinate>
     {
         public int x;
         public int y;
+        public Coordinate(int newX, int newY)
+        {
+            x = newX;
+            y = newY;
+        }
+
+        public int CompareTo(Coordinate other)
+        {
+            if (this.x == other.x && this.y == other.y)
+                return 0;
+            else
+                return -1;
+        }
     }
     public class Point
     {
         public bool HasMine { get; }
         public bool IsFlagged { get; set; }
-        Coordinate PointCoordinate { get; }
+        public Coordinate PointCoordinate { get; }
         public bool IsOpenend { get; set; }
         public int NumOfAdjacentMines { get; set; }
 
