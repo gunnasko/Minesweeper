@@ -109,6 +109,26 @@ namespace Minesweeper
             return AccessPoint(coordinate).IsOpened;
         }
 
+        public bool PointIsFlagged(int x, int y)
+        {
+            return PointIsFlagged(new Coordinate(newX: x, newY: y));
+        }
+
+        public bool PointIsFlagged(Coordinate coordinate)
+        {
+            return AccessPoint(coordinate).IsFlagged;
+        }
+
+        public void FlagPoint(int x, int y, bool setFlag)
+        {
+            FlagPoint(new Coordinate(newX: x, newY: y), setFlag);
+        }
+
+        public void FlagPoint(Coordinate coordinate, bool setFlag)
+        {
+            AccessPoint(coordinate).IsFlagged = setFlag;
+        }
+
         public BoardActionResult OpenPoint(int x, int y)
         {
             return OpenPoint(new Coordinate(newX: x, newY: y));

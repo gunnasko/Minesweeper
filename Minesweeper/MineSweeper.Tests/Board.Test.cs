@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
+using MineSweeper.Tests;
 
 namespace Minesweeper.Tests
 {
@@ -19,7 +20,6 @@ namespace Minesweeper.Tests
             int mineCounter = CountNumberOfMines(numOfColumns, numOfRows, board);
             Assert.AreEqual(numOfMines, mineCounter);
         }
-
         private static int CountNumberOfMines(int numOfColumns, int numOfRows, Board board)
         {
             int mineCounter = 0;
@@ -54,7 +54,7 @@ namespace Minesweeper.Tests
         [TestMethod]
         public void OpenedAPointWithoutAMineReturnsAdjancentMines()
         {
-            Board testBoard = CreateCheckerboardTestBoard(4,4);
+            Board testBoard = BoardUtils.CreateCheckerboardTestBoard(4,4);
 
             //Top row, expect three adjacent mines
             BoardActionResult result = testBoard.OpenPoint(0, 1);
@@ -75,7 +75,7 @@ namespace Minesweeper.Tests
         [TestMethod]
         public void OpeningAPointWithNoAdjacentMinesAutoOpensAllNeighboursWithNoAdjacentMines()
         {
-            Board board = CreateSingleMineTopRightBoard(4, 4);
+            Board board = BoardUtils.CreateSingleMineTopRightBoard(4, 4);
             Assert.AreEqual(true, board.PointHasMine(0, 3));
 
             //Open a point that has no adjacent mines
@@ -94,55 +94,57 @@ namespace Minesweeper.Tests
             Assert.AreEqual(true, board.PointIsOpen(3, 3));
         }
 
-        private Board CreateSingleMineTopRightBoard(int numOfRows, int numOfColumns)
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void CannotOpenAnAlreadyOpenedPoint()
         {
-            var mockPoints = new Dictionary<Coordinate, Point>();
+            Board board = BoardUtils.CreateSingleMineTopRightBoard(4, 4);
 
-            for (int x = 0; x < numOfRows; x++)
-            {
-                for (int y = 0; y < numOfColumns; y++)
-                {
-                    var coordinate = new Coordinate(newX: x, newY: y);
-                    var point = new Point(coordinate);
-                    mockPoints[coordinate] = point;
-                }
-                //Switch between each row for checkerboard effect
-            }
-            var topRightCoord = new Coordinate(newX: 0, newY: numOfColumns - 1);
-            mockPoints[topRightCoord].HasMine = true;
-            return new Board(mockPoints);
+            board.OpenPoint(1, 1);
+            board.OpenPoint(1, 1);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void CannotOpenAPointOutsideOfTheBoard()
+        {
+            Board board = BoardUtils.CreateSingleMineTopRightBoard(4, 4);
+
+            board.OpenPoint(4, 4);
+        }
+
+        [TestMethod]
+        public void CanFlagAPointOnBoard()
+        {
+            int numOfColumns = 8;
+            int numOfRows = 8;
+            int numOfMines = 10;
+            var board = new Board(numOfColumns, numOfRows, numOfMines);
+
+            board.FlagPoint(1, 1, true);
+            Assert.AreEqual(true, board.PointIsFlagged(1, 1));
+
+            board.FlagPoint(1, 1, false);
+            Assert.AreEqual(false, board.PointIsFlagged(1, 1));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void CannotFlagCoordinateNotOnBoard()
+        {
+            int numOfColumns = 8;
+            int numOfRows = 8;
+            int numOfMines = 10;
+            var board = new Board(numOfColumns, numOfRows, numOfMines);
+
+            board.FlagPoint(8, 8, true);
         }
 
 
-        /*****
-         * Creates checkerboard mined board:
-         * |X| |X| |
-         * | |X| |X|
-         * |X| |X| |
-         *****/
-        private static Board CreateCheckerboardTestBoard(int numOfRows, int numOfColumns)
-        {
-            var mockPoints = new Dictionary<Coordinate, Point>();
 
-            bool mineSwitcher = true;
 
-            for (int x = 0; x < numOfRows; x++)
-            {
-                for (int y = 0; y < numOfColumns; y++)
-                {
-                    var coordinate = new Coordinate(newX: x, newY: y);
-                    var point = new Point(coordinate);
-                    if (mineSwitcher)
-                    {
-                        point.HasMine = true;
-                    }
-                    mineSwitcher = !mineSwitcher;
-                    mockPoints[coordinate] = point;
-                }
-                //Switch between each row for checkerboard effect
-                mineSwitcher = !mineSwitcher;
-            }
-            return new Board(mockPoints);
-        }
+
+
+
     }
 }
