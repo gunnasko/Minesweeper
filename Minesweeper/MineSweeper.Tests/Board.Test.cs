@@ -23,11 +23,11 @@ namespace Minesweeper.Tests
         private static int CountNumberOfMines(int numOfColumns, int numOfRows, Board board)
         {
             int mineCounter = 0;
-            for (int i = 0; i < numOfColumns; i++)
+            for (int x = 0; x < numOfRows; x++)
             {
-                for (int j = 0; j < numOfRows; j++)
+                for (int y = 0; y < numOfColumns; y++)
                 {
-                    var coordinate = new Coordinate(i, j);
+                    var coordinate = new Coordinate(newX: x, newY: y);
                     if (board.PointHasMine(coordinate))
                     {
                         mineCounter++;
@@ -40,7 +40,7 @@ namespace Minesweeper.Tests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void BoardThrowsExceptionIfTryingToAccessUnknownCoordinate()
+        public void BoardThrowsExceptionIfTryingToReadMineOnUnknownCoordinate()
         {
             int numOfColumns = 8;
             int numOfRows = 8;
@@ -49,6 +49,58 @@ namespace Minesweeper.Tests
 
             var outOfBoundCoordinate = new Coordinate(numOfColumns + 1, numOfRows + 1);
             board.PointHasMine(outOfBoundCoordinate);
+        }
+
+        [TestMethod]
+        public void OpenedAPointWithoutAMineReturnsAdjancentMines()
+        {
+            Board testBoard = CreateCheckerboardTestBoard(4,4);
+
+            //Top row, expect three adjacent mines
+            BoardActionResult result = testBoard.OpenPoint(new Coordinate(0, 1));
+            Assert.AreEqual(3, result.AdjacentMines);
+            Assert.AreEqual(false, result.SteppedOnMine);
+
+            //Top right corner, expect 2 adjacent mines
+            result = testBoard.OpenPoint(new Coordinate(0, 3));
+            Assert.AreEqual(2, result.AdjacentMines);
+            Assert.AreEqual(false, result.SteppedOnMine);
+
+            //Middle, expect 4 adjacent mines
+            result = testBoard.OpenPoint(new Coordinate(1, 2));
+            Assert.AreEqual(4, result.AdjacentMines);
+            Assert.AreEqual(false, result.SteppedOnMine);
+        }
+
+        /*****
+         * Creates checkerboard mined board:
+         * |X| |X| |
+         * | |X| |X|
+         * |X| |X| |
+         *****/
+        private static Board CreateCheckerboardTestBoard(int numOfColumns, int numOfRows)
+        {
+            var mockPoints = new Dictionary<Coordinate, Point>();
+
+            bool mineSwitcher = true;
+
+            for (int x = 0; x < numOfRows; x++)
+            {
+                for (int y = 0; y < numOfColumns; y++)
+                {
+                    var coordinate = new Coordinate(newX: x, newY: y);
+                    var point = new Point(coordinate);
+                    if (mineSwitcher)
+                    {
+                        point.HasMine = true;
+                    }
+                    mineSwitcher = !mineSwitcher;
+                    mockPoints[coordinate] = point;
+                }
+                //Switch between each row for checkerboard effect
+                mineSwitcher = !mineSwitcher;
+            }
+            return new Board(mockPoints);
         }
     }
 }

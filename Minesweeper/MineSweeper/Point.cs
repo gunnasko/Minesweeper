@@ -31,12 +31,12 @@ namespace Minesweeper
         public bool HasMine { get; set; }
         public bool IsFlagged { get; set; }
         public Coordinate PointCoordinate { get; }
-        public bool IsOpenend { get; set; }
-        public int NumOfAdjacentMines { get; set; }
+        public bool IsOpened { get; set; }
 
         public Point(Coordinate coordinate)
         {
             PointCoordinate = coordinate;
+            IsOpened = false;
         }
 
     }

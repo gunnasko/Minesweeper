@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace Minesweeper
 {
+    public struct BoardActionResult
+    {
+        public int AdjacentMines { get; set; }
+        public bool SteppedOnMine { get; set; }
+    }
+
+
     public class Board
     {
         private Dictionary<Coordinate, Point> points;
@@ -31,11 +38,17 @@ namespace Minesweeper
         {
         }
 
+        //Used for testing
+        public Board(Dictionary<Coordinate, Point> mockedDict)
+        {
+            points = mockedDict;
+        }
+
         private void FillPoints()
         {
-            for (int x = 0; x < numOfColumns; x++)
+            for (int x = 0; x < numOfRows; x++)
             {
-                for (int y = 0; y < numOfRows; y++)
+                for (int y = 0; y < numOfColumns; y++)
                 {
                     var coordinate = new Coordinate(newX: x, newY: y);
                     var point = new Point(coordinate);
@@ -55,7 +68,7 @@ namespace Minesweeper
 
                 var minedCoordinate = new Coordinate(randomX, randomy);
                 Point pointCandidate = points[minedCoordinate];
-                
+
                 if (pointCandidate.HasMine == false)
                 {
                     pointCandidate.HasMine = true;
@@ -64,17 +77,80 @@ namespace Minesweeper
             }
         }
 
-        public bool PointHasMine(Coordinate coordinate)
+        private Point AccessPoint(Coordinate coordinate)
         {
             try
             {
-                var point = points[coordinate];
-                return point.HasMine;
+                return points[coordinate];
             }
             catch (KeyNotFoundException)
             {
                 throw new ArgumentOutOfRangeException($"Coordinate given does not exist on board!");
             }
+        }
+
+        public bool PointHasMine(Coordinate coordinate)
+        {
+            return AccessPoint(coordinate).HasMine;
+        }
+
+        public BoardActionResult OpenPoint(Coordinate coordinate)
+        {
+            Point point = AccessPoint(coordinate);
+
+            if (point.IsOpened)
+            {
+                throw new ArgumentException("Cannot open point that is already opened!");
+            }
+
+            point.IsOpened = true;
+
+            int adjacentMines = 0;
+            if (!point.HasMine)
+            {
+                adjacentMines = CalculateAdjacentMines(point);
+            }
+
+            return new BoardActionResult
+            {
+                AdjacentMines = adjacentMines,
+                SteppedOnMine = point.HasMine
+            };
+        }
+
+        private int CalculateAdjacentMines(Point sentralPoint)
+        {
+            int adjacentMineCounter = 0;
+            int pointX = sentralPoint.PointCoordinate.x;
+            int pointY = sentralPoint.PointCoordinate.y;
+
+            var candidatePoints = new List<Coordinate>();
+
+            candidatePoints.Add(new Coordinate(pointX + 1, pointY));
+            candidatePoints.Add(new Coordinate(pointX, pointY + 1));
+            candidatePoints.Add(new Coordinate(pointX + 1, pointY + 1));
+
+            candidatePoints.Add(new Coordinate(pointX - 1, pointY));
+            candidatePoints.Add(new Coordinate(pointX, pointY - 1));
+            candidatePoints.Add(new Coordinate(pointX - 1, pointY - 1));
+
+            foreach (var neighbourCoord in candidatePoints)
+            {
+                try
+                {
+                    Point neighbourPoint = AccessPoint(neighbourCoord);
+                    if (neighbourPoint.HasMine)
+                    {
+                        adjacentMineCounter++;
+                    }
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    //Do nothing. We just do not want to update mine counter.
+                }
+            }
+
+            return adjacentMineCounter;
         }
     }
 }
