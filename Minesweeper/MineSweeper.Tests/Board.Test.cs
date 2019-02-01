@@ -58,6 +58,18 @@ namespace Minesweeper.Tests
             var board = new Board(numOfColumns, numOfRows, numOfMines);
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void BoardMinesCannotBeMoreThanCreatedPoints()
+        {
+            int numOfColumns = 4;
+            int numOfRows = 4;
+            int numOfMines = 17;
+            //4*4 = 16 < 17, throw exception
+            var board = new Board(numOfColumns, numOfRows, numOfMines);
+        }
+
+
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
