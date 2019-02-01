@@ -94,6 +94,22 @@ namespace Minesweeper
             return AccessPoint(coordinate).HasMine;
         }
 
+        public bool PointIsOpen(int x, int y)
+        {
+            return PointIsOpen(new Coordinate(newX: x, newY: y));
+        }
+
+        public bool PointIsOpen(Coordinate coordinate)
+        {
+            return AccessPoint(coordinate).IsOpened;
+        }
+
+        public BoardActionResult OpenPoint(int x, int y)
+        {
+            return OpenPoint(new Coordinate(newX: x, newY: y));
+        }
+
+
         public BoardActionResult OpenPoint(Coordinate coordinate)
         {
             Point point = AccessPoint(coordinate);
