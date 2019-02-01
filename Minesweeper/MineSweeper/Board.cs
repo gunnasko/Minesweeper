@@ -24,6 +24,12 @@ namespace Minesweeper
 
         public Board(int boardColumnSize, int boardRowSize, int numOfMinesInGames)
         {
+            if (numOfMinesInGames <= 0)
+            {
+                throw new ArgumentOutOfRangeException("Board must have atleast one mine");
+            }
+
+
             points = new Dictionary<Coordinate, Point>();
             numOfColumns = boardColumnSize;
             numOfRows = boardRowSize;

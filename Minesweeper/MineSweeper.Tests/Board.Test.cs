@@ -40,7 +40,17 @@ namespace Minesweeper.Tests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void BoardThrowsExceptionIfTryingToReadMineOnUnknownCoordinate()
+        public void BoardMustHaveMines()
+        {
+            int numOfColumns = 8;
+            int numOfRows = 8;
+            int numOfMines = 0;
+            var board = new Board(numOfColumns, numOfRows, numOfMines);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void CannotReadMineOutsideBoardRange()
         {
             int numOfColumns = 8;
             int numOfRows = 8;
