@@ -24,7 +24,7 @@ namespace Minesweeper.Tests
             }
             var topRightCoord = new Coordinate(newX: 0, newY: numOfColumns - 1);
             mockPoints[topRightCoord].HasMine = true;
-            return new Board(mockPoints);
+            return new Board(numOfColumns ,numOfRows, mockPoints);
         }
 
 
@@ -56,7 +56,7 @@ namespace Minesweeper.Tests
                 //Switch between each row for checkerboard effect
                 mineSwitcher = !mineSwitcher;
             }
-            return new Board(mockPoints);
+            return new Board(numOfColumns, numOfRows, mockPoints);
         }
     }
 }
