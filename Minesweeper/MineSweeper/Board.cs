@@ -89,6 +89,11 @@ namespace Minesweeper
             }
         }
 
+        public bool PointHasMine(int x, int y)
+        {
+            return PointHasMine(new Coordinate(newX: x, newY: y));
+        }
+
         public bool PointHasMine(Coordinate coordinate)
         {
             return AccessPoint(coordinate).HasMine;
@@ -124,7 +129,12 @@ namespace Minesweeper
             int adjacentMines = 0;
             if (!point.HasMine)
             {
-                adjacentMines = CalculateAdjacentMines(point);
+                adjacentMines = CalculateAdjacentMines(point.PointCoordinate);
+                if (adjacentMines == 0)
+                {
+                    //Warning, recursion!
+                    OpenNeighbourPoints(point);
+                }
             }
 
             return new BoardActionResult
@@ -134,21 +144,55 @@ namespace Minesweeper
             };
         }
 
-        private int CalculateAdjacentMines(Point sentralPoint)
+        private void OpenNeighbourPoints(Point point)
+        {
+            List<Coordinate> neighborCoordinates = GetNeighborCoordinates(point.PointCoordinate);
+            foreach (var neighbourCoord in neighborCoordinates)
+            {
+                try
+                {
+                    int adjacentMines = CalculateAdjacentMines(neighbourCoord);
+                    if (adjacentMines == 0)
+                    {
+                        OpenPoint(neighbourCoord);
+                    }
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    //Do nothing.
+                }
+                catch (ArgumentException)
+                {
+                    //Do nothing, thrown if already opened.
+                }
+            }
+        }
+
+        private List<Coordinate> GetNeighborCoordinates(Coordinate sentralCoordinate)
+        {
+            int pointX = sentralCoordinate.x;
+            int pointY = sentralCoordinate.y;
+
+            var neighbourCoordinates = new List<Coordinate>();
+
+            neighbourCoordinates.Add(new Coordinate(pointX + 1, pointY));
+            neighbourCoordinates.Add(new Coordinate(pointX, pointY + 1));
+            neighbourCoordinates.Add(new Coordinate(pointX + 1, pointY + 1));
+
+            neighbourCoordinates.Add(new Coordinate(pointX - 1, pointY));
+            neighbourCoordinates.Add(new Coordinate(pointX, pointY - 1));
+            neighbourCoordinates.Add(new Coordinate(pointX - 1, pointY - 1));
+
+            neighbourCoordinates.Add(new Coordinate(pointX + 1, pointY - 1));
+            neighbourCoordinates.Add(new Coordinate(pointX - 1, pointY + 1));
+
+            return neighbourCoordinates;
+        }
+
+        private int CalculateAdjacentMines(Coordinate sentralCoordinate)
         {
             int adjacentMineCounter = 0;
-            int pointX = sentralPoint.PointCoordinate.x;
-            int pointY = sentralPoint.PointCoordinate.y;
-
-            var candidatePoints = new List<Coordinate>();
-
-            candidatePoints.Add(new Coordinate(pointX + 1, pointY));
-            candidatePoints.Add(new Coordinate(pointX, pointY + 1));
-            candidatePoints.Add(new Coordinate(pointX + 1, pointY + 1));
-
-            candidatePoints.Add(new Coordinate(pointX - 1, pointY));
-            candidatePoints.Add(new Coordinate(pointX, pointY - 1));
-            candidatePoints.Add(new Coordinate(pointX - 1, pointY - 1));
+            var candidatePoints = GetNeighborCoordinates(sentralCoordinate);
 
             foreach (var neighbourCoord in candidatePoints)
             {

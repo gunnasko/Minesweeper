@@ -76,6 +76,7 @@ namespace Minesweeper.Tests
         public void OpeningAPointWithNoAdjacentMinesAutoOpensAllNeighboursWithNoAdjacentMines()
         {
             Board board = CreateSingleMineTopRightBoard(4, 4);
+            Assert.AreEqual(true, board.PointHasMine(0, 3));
 
             //Open a point that has no adjacent mines
             board.OpenPoint(1, 1);
