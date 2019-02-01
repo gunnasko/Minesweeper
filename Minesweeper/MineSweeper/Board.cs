@@ -29,6 +29,11 @@ namespace Minesweeper
                 throw new ArgumentOutOfRangeException("Board must have atleast one mine");
             }
 
+            if (boardColumnSize < 2 || boardRowSize < 2)
+            {
+                throw new ArgumentOutOfRangeException("Board size must be atleast two in columns and rows");
+            }
+
 
             points = new Dictionary<Coordinate, Point>();
             numOfColumns = boardColumnSize;

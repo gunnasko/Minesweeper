@@ -50,6 +50,17 @@ namespace Minesweeper.Tests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void BoardColumnsAndRowsMustBeAtleastTwo()
+        {
+            int numOfColumns = 1;
+            int numOfRows = 1;
+            int numOfMines = 1;
+            var board = new Board(numOfColumns, numOfRows, numOfMines);
+        }
+
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void CannotReadMineOutsideBoardRange()
         {
             int numOfColumns = 8;
