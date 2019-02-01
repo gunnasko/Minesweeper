@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.271
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineSweeper", "MineSweeper\MineSweeper.csproj", "{2DD56AA4-C3B1-4F74-B68C-2703566330CB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Minesweeper", "MineSweeper\Minesweeper.csproj", "{2DD56AA4-C3B1-4F74-B68C-2703566330CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineSweeper.Tests", "MineSweeper.Tests\MineSweeper.Tests.csproj", "{1324C1C5-A62C-4C44-8BA4-973ED6518D2B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Minesweeper.Tests", "MineSweeper.Tests\Minesweeper.Tests.csproj", "{1324C1C5-A62C-4C44-8BA4-973ED6518D2B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

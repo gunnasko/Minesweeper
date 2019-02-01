@@ -57,9 +57,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MineSweeper\MineSweeper.csproj">
+    <ProjectReference Include="..\MineSweeper\Minesweeper.csproj">
       <Project>{2dd56aa4-c3b1-4f74-b68c-2703566330cb}</Project>
-      <Name>MineSweeper</Name>
+      <Name>Minesweeper</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

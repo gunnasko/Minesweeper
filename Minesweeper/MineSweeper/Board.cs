@@ -39,8 +39,6 @@ namespace Minesweeper
                 throw new ArgumentOutOfRangeException("Number of mines cannot be larger than possible number of points");
             }
 
-
-
             points = new Dictionary<Coordinate, Point>();
             numOfColumns = boardColumnSize;
             numOfRows = boardRowSize;
