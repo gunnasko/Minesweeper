@@ -8,31 +8,71 @@ namespace Minesweeper
 {
     public class Board
     {
-        private List<Point> points;
+        private Dictionary<Coordinate, Point> points;
         private int numOfColumns;
         private int numOfRows;
         private int numOfMines;
+        private int addedMines = 0;
+        Random randomGenerator;
 
         public Board(int boardColumnSize, int boardRowSize, int numOfMinesInGames)
         {
             numOfColumns = boardColumnSize;
             numOfRows = boardRowSize;
             numOfMines = numOfMinesInGames;
+
+            randomGenerator = new Random();
+            FillPoints();
+            AddMines();
         }
 
         public Board() : this(8, 8, 10)
         {
         }
 
-        public void FillPoints()
+        private void FillPoints()
         {
-            //TODO: Create unit test for board.
-            
+            for (int x = 0; x < numOfColumns; x++)
+            {
+                for (int y = 0; y < numOfRows; y++)
+                {
+                    var coordinate = new Coordinate(newX: x, newY: y);
+                    var point = new Point(coordinate);
+                    points[coordinate] = (point);
+                }
+            }
         }
 
-        public IEnumerable<Point> GetPoints()
+        private void AddMines()
         {
-            return points;
+            addedMines = 0;
+
+            while (addedMines < numOfMines)
+            {
+                int randomX = randomGenerator.Next(numOfColumns);
+                int randomy = randomGenerator.Next(numOfRows);
+
+                var minedCoordinate = new Coordinate(randomX, randomy);
+                Point pointCandidate = points[minedCoordinate];
+                
+                if (pointCandidate.HasMine == false)
+                {
+                    pointCandidate.HasMine = true;
+                    addedMines++;
+                }
+            }
+        }
+
+        public bool PointHasMine(Coordinate coordinate)
+        {
+            var point = points[coordinate];
+
+            if (point == null)
+            {
+                throw new ArgumentOutOfRangeException($"Coordinate given does not exist on board!");
+            }
+
+            return point.HasMine;
         }
     }
 }

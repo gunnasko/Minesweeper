@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Minesweeper
 {
-    public struct Coordinate : IComparable<Coordinate>
+    public struct Coordinate : IEqualityComparer<Coordinate>
     {
         public int x;
         public int y;
@@ -16,26 +16,28 @@ namespace Minesweeper
             y = newY;
         }
 
-        public int CompareTo(Coordinate other)
+        public bool Equals(Coordinate cordA, Coordinate cordB)
         {
-            if (this.x == other.x && this.y == other.y)
-                return 0;
-            else
-                return -1;
+            return (cordA.x == cordB.x && cordA.y == cordB.y);
+        }
+
+        public int GetHashCode(Coordinate obj)
+        {
+            return obj.x.GetHashCode() + obj.y.GetHashCode();
         }
     }
     public class Point
     {
-        public bool HasMine { get; }
+        public bool HasMine { get; set; }
         public bool IsFlagged { get; set; }
         public Coordinate PointCoordinate { get; }
         public bool IsOpenend { get; set; }
         public int NumOfAdjacentMines { get; set; }
 
-        public Point(bool hasMine, Coordinate coordinate)
+        public Point(Coordinate coordinate)
         {
             PointCoordinate = coordinate;
-            HasMine = hasMine;
         }
+
     }
 }
