@@ -32,6 +32,8 @@ namespace Minesweeper
             IsOpened = false;
         }
 
+        public int AdjacentMines { get; set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string info)
         {

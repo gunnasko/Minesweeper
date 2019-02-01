@@ -165,13 +165,14 @@ namespace Minesweeper
                 throw new ArgumentException("Cannot open point that is already opened!");
             }
 
+            point.AdjacentMines = CalculateAdjacentMines(point.PointCoordinate);
+
             point.IsOpened = true;
 
-            int adjacentMines = 0;
             if (!point.HasMine)
             {
-                adjacentMines = CalculateAdjacentMines(point.PointCoordinate);
-                if (adjacentMines == 0)
+
+                if (point.AdjacentMines == 0)
                 {
                     //Warning, recursion!
                     OpenNeighbourPoints(point);
@@ -180,7 +181,7 @@ namespace Minesweeper
 
             return new BoardActionResult
             {
-                AdjacentMines = adjacentMines,
+                AdjacentMines = point.AdjacentMines,
                 SteppedOnMine = point.HasMine
             };
         }
@@ -193,9 +194,7 @@ namespace Minesweeper
                 try
                 {
                     Point neighbourPoint = AccessPoint(neighbourCoord);
-
-                    int adjacentMines = CalculateAdjacentMines(neighbourPoint.PointCoordinate);
-                    if (adjacentMines == 0 && !neighbourPoint.IsOpened)
+                    if (!neighbourPoint.IsOpened)
                     {
                         OpenPoint(neighbourCoord);
                     }
@@ -263,7 +262,7 @@ namespace Minesweeper
                     //Do nothing. We just do not want to update mine counter.
                 }
             }
-
+            var centerPoint = AccessPoint(sentralCoordinate);
             return adjacentMineCounter;
         }
     }

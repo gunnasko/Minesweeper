@@ -47,9 +47,23 @@ namespace Minesweeper
                     pointButton.Click += OnPointButtonClicked;
 
                     Binding pointBinding = new Binding("IsOpened");
-                    pointBinding.Converter = new OpenedPointConvert();
+                    pointBinding.Converter = new OpenedPointStyleConvert();
                     pointBinding.Source = point;
                     pointButton.SetBinding(Button.StyleProperty, pointBinding);
+
+
+                    Binding pointBinding2 = new Binding("");
+                    pointBinding2.Source = point;
+
+                    Binding pointBinding3 = new Binding("IsOpened");
+                    pointBinding2.Source = point;
+
+                    MultiBinding multiBinding = new MultiBinding();
+
+                    multiBinding.Bindings.Add(pointBinding2);
+                    multiBinding.Bindings.Add(pointBinding3);
+                    multiBinding.Converter = new OpenedPointContentConvert();
+                    pointButton.SetBinding(Button.ContentProperty, multiBinding);
 
 
                     pointButton.DataContext = point;
@@ -69,14 +83,14 @@ namespace Minesweeper
             {
                 BoardActionResult result = _board.OpenPoint(point.PointCoordinate);
 
-                if (result.SteppedOnMine)
+               /* if (result.SteppedOnMine)
                 {
                     button.Content = "X";
                 }
                 else if (result.AdjacentMines > 0)
                 {
                     button.Content = result.AdjacentMines.ToString();
-                }
+                }*/
             }
             catch (ArgumentException)
             {
@@ -85,7 +99,7 @@ namespace Minesweeper
         }
     }
 
-    public class OpenedPointConvert : IValueConverter
+    public class OpenedPointStyleConvert : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -97,4 +111,33 @@ namespace Minesweeper
             throw new NotImplementedException();
         }
     }
+
+    public class OpenedPointContentConvert : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var point = values[0] as Point;
+            if (!point.IsOpened)
+            {
+                return "";
+            }
+
+            if (point.HasMine)
+            {
+                return "X";
+            }
+            else if (point.AdjacentMines > 0)
+            {
+                return point.AdjacentMines.ToString();
+            }
+            return "";
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
 }
