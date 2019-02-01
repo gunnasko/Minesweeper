@@ -9,7 +9,7 @@ namespace Minesweeper.Tests
     public class BoardTests
     {
         [TestMethod]
-        public void BoardCreatesHasCorrectPoints()
+        public void BoardCreatesHasCreatedCorrectNumberOfMines()
         {
             int numOfColumns = 8;
             int numOfRows = 8;
@@ -36,6 +36,19 @@ namespace Minesweeper.Tests
             }
 
             return mineCounter;
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void BoardThrowsExceptionIfTryingToAccessUnknownCoordinate()
+        {
+            int numOfColumns = 8;
+            int numOfRows = 8;
+            int numOfMines = 10;
+            var board = new Board(numOfColumns, numOfRows, numOfMines);
+
+            var outOfBoundCoordinate = new Coordinate(numOfColumns + 1, numOfRows + 1);
+            board.PointHasMine(outOfBoundCoordinate);
         }
     }
 }
