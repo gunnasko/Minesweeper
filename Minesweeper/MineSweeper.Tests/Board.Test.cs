@@ -168,6 +168,39 @@ namespace Minesweeper.Tests
             board.FlagPoint(8, 8, true);
         }
 
+        [TestMethod]
+        public void CannotWinGameUntilAllPointsThatDoNotContainMinesAreOpen()
+        {
+            Board board = BoardUtils.CreateCheckerboardTestBoard(3, 3);
+            board.OpenPoint(0, 1);
+            Assert.IsFalse(board.HasWonGame());
+            board.OpenPoint(1, 0);
+            board.OpenPoint(1, 2);
+            Assert.IsFalse(board.HasWonGame());
+            board.OpenPoint(2, 1);
+
+            Assert.IsTrue(board.HasWonGame());
+        }
+
+        [TestMethod]
+        public void CannotWinGameIfMineHasOpened()
+        {
+            Board board = BoardUtils.CreateCheckerboardTestBoard(3, 3);
+            board.OpenPoint(0, 1);
+            Assert.IsFalse(board.HasWonGame());
+            board.OpenPoint(1, 0);
+            board.OpenPoint(1, 2);
+            Assert.IsFalse(board.HasWonGame());
+            board.OpenPoint(2, 1);
+
+            //Open a mine
+            board.OpenPoint(1, 1);
+            Assert.IsFalse(board.HasWonGame());
+        }
+
+
+
+
 
 
 

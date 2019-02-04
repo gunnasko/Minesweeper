@@ -27,6 +27,13 @@ namespace Minesweeper
             InitializeComponent();
 
             //Currently use default values
+            SetupNewBoard();
+        }
+
+        private void SetupNewBoard()
+        {
+            ResetBoardGrid();
+            StatusTextBox.Text = "Running...";
             _board = new Board();
             for (int x = 0; x < _board.RowSize; x++)
             {
@@ -50,6 +57,13 @@ namespace Minesweeper
                     boardGrid.Children.Add(pointButton);
                 }
             }
+        }
+
+        private void ResetBoardGrid()
+        {
+            boardGrid.Children.Clear();
+            boardGrid.RowDefinitions.Clear();
+            boardGrid.ColumnDefinitions.Clear();
         }
 
         private Button CreateNewPointButton(Point point)
@@ -77,7 +91,42 @@ namespace Minesweeper
             var button = (Button)sender;
             var point = button.DataContext as Point;
 
-            _board.OpenPoint(point.PointCoordinate);
+            BoardActionResult result = _board.OpenPoint(point.PointCoordinate);
+            
+            if (result.SteppedOnMine)
+            {
+                GameLost();
+            }
+            else if (_board.HasWonGame())
+            {
+                GameWon();
+            }
+        }
+
+        private void GameLost()
+        {
+            StatusTextBox.Text = "Lost!";
+            FreezeBoardGrid();
+        }
+
+        private void GameWon()
+        {
+            StatusTextBox.Text = "Won!";
+            FreezeBoardGrid();
+        }
+
+
+        private void FreezeBoardGrid()
+        {
+            foreach (var child in boardGrid.Children)
+            {
+                var button = child as Button;
+                if (button != null)
+                {
+                    button.Click -= PointButton_MouseLeftClick;
+                    button.MouseRightButtonUp -= PointButton_MouseRightButtonUp;
+                }
+            }
         }
 
         private static void SetupPointButtonBindings(Point point, Button pointButton)
@@ -115,6 +164,11 @@ namespace Minesweeper
 	        isOpenedStyleBinding.Source = point;
 	        pointButton.SetBinding(Button.StyleProperty, isOpenedStyleBinding);
 
+        }
+
+        private void RestartButton_Click(object sender, RoutedEventArgs e)
+        {
+            SetupNewBoard();
         }
     }
 
