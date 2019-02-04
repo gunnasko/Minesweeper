@@ -22,6 +22,9 @@ namespace Minesweeper
     public partial class MainWindow : Window
     {
         private Board _board;
+        private GameDifficulty _gameDifficulty;
+        private GameSettings _customGameSettings;
+
         public MainWindow()
         {
             InitializeComponent();
