@@ -27,6 +27,13 @@ namespace Minesweeper
             InitializeComponent();
 
             //Currently use default values
+            SetupNewBoard();
+        }
+
+        private void SetupNewBoard()
+        {
+            ResetBoardGrid();
+
             _board = new Board();
             for (int x = 0; x < _board.RowSize; x++)
             {
@@ -50,6 +57,13 @@ namespace Minesweeper
                     boardGrid.Children.Add(pointButton);
                 }
             }
+        }
+
+        private void ResetBoardGrid()
+        {
+            boardGrid.Children.Clear();
+            boardGrid.RowDefinitions.Clear();
+            boardGrid.ColumnDefinitions.Clear();
         }
 
         private Button CreateNewPointButton(Point point)
@@ -115,6 +129,11 @@ namespace Minesweeper
 	        isOpenedStyleBinding.Source = point;
 	        pointButton.SetBinding(Button.StyleProperty, isOpenedStyleBinding);
 
+        }
+
+        private void RestartButton_Click(object sender, RoutedEventArgs e)
+        {
+            SetupNewBoard();
         }
     }
 
