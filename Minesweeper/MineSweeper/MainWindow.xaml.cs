@@ -78,6 +78,9 @@ namespace Minesweeper
             SetupPointButtonBindings(point, pointButton);
 
             pointButton.DataContext = point;
+            pointButton.Height = 20;
+            pointButton.Width = 20;
+
             return pointButton;
         }
 
