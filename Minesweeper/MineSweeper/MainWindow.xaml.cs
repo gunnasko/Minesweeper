@@ -22,8 +22,12 @@ namespace Minesweeper
     public partial class MainWindow : Window
     {
         private Board _board;
+        private GameSettings _gameSettings;
+        private GameDifficulty _gameDifficulty = GameDifficulty.Beginner;
+
         public MainWindow()
         {
+            _gameSettings = GameSettingsUtils.GetGameSettingsFromDifficulty(_gameDifficulty);
             InitializeComponent();
 
             //Currently use default values
@@ -34,7 +38,7 @@ namespace Minesweeper
         {
             ResetBoardGrid();
             StatusTextBox.Text = "Running...";
-            _board = new Board();
+            _board = new Board(_gameSettings);
             for (int x = 0; x < _board.RowSize; x++)
             {
                 boardGrid.RowDefinitions.Add(new RowDefinition());
@@ -74,6 +78,9 @@ namespace Minesweeper
             SetupPointButtonBindings(point, pointButton);
 
             pointButton.DataContext = point;
+            pointButton.Height = 20;
+            pointButton.Width = 20;
+
             return pointButton;
         }
 
@@ -166,9 +173,29 @@ namespace Minesweeper
 
         }
 
-        private void RestartButton_Click(object sender, RoutedEventArgs e)
+        private void RestartGameMenu_Click(object sender, RoutedEventArgs e)
         {
             SetupNewBoard();
+        }
+
+        private void SettingsMenu_Click(object sender, RoutedEventArgs e)
+        {
+            var gameDialog = new GameSettingsDialog();
+            if (gameDialog.ShowDialog() == true)
+            {
+                _gameDifficulty = gameDialog.SelectedDifficulty;
+                _gameSettings = GameSettingsUtils.GetGameSettingsFromDifficulty(_gameDifficulty);
+
+                if (_gameDifficulty == GameDifficulty.Custom)
+                {
+                    _gameSettings = GameSettingsUtils.GetGameSettingsFromDifficulty(_gameDifficulty,
+                        int.Parse(gameDialog.customWidth.Text),
+                        int.Parse(gameDialog.customHeight.Text),
+                        int.Parse(gameDialog.customMines.Text));
+                }
+
+                SetupNewBoard();
+            }
         }
     }
 

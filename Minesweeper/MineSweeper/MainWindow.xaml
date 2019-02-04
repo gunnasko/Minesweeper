@@ -5,12 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Minesweeper"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" SizeToContent="WidthAndHeight">
 
     <Grid>
-        <Grid x:Name="boardGrid" HorizontalAlignment="Left" Height="370" Margin="10,39,0,0" VerticalAlignment="Top" Width="772"/>
-        <Button x:Name="RestartButton" Content="Restart Game" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="94" Click="RestartButton_Click"/>
-        <TextBox x:Name="StatusTextBox" HorizontalAlignment="Left" Height="23" Margin="662,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem x:Name="restartGameMenu" Header="_Restart Game" Click="RestartGameMenu_Click"/>
+                <MenuItem x:Name="settingsMenu" Header="_Settings" Click="SettingsMenu_Click"/>
+            </Menu>
+            <StackPanel>
+                <TextBox x:Name="StatusTextBox" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" HorizontalAlignment="Center"/>
+                <Grid x:Name="boardGrid" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Height="Auto" Width="Auto"/>
+            </StackPanel>
+
+        </DockPanel>
+
 
     </Grid>
 </Window>

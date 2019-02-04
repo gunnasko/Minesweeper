@@ -16,8 +16,8 @@ namespace Minesweeper
         private Dictionary<Coordinate, Point> _points;
         private int _addedMines = 0;
 
-        public int ColumnSize { get; }
-        public int RowSize { get; }
+        public int ColumnSize { get; } //Y
+        public int RowSize { get; } //X
         public int NumberOfMines { get; }
 
 
@@ -53,6 +53,13 @@ namespace Minesweeper
         public Board() : this(8, 8, 10)
         {
         }
+        public Board(GameSettings gameSettings) :this(
+            gameSettings.BoardNumberOfColumns,
+            gameSettings.BoardNumberOfRows, 
+            gameSettings.BoardNumberOfMines)
+        {
+
+        }
 
         //Used for testing
         public Board(int boardColumnSize, int boardRowSize, int numOfMinesInGames, Dictionary<Coordinate, Point> mockedDict)
@@ -82,10 +89,10 @@ namespace Minesweeper
 
             while (_addedMines < NumberOfMines)
             {
-                int randomX = _randomGenerator.Next(ColumnSize);
-                int randomy = _randomGenerator.Next(RowSize);
+                int randomX = _randomGenerator.Next(RowSize);
+                int randomY = _randomGenerator.Next(ColumnSize);
 
-                var minedCoordinate = new Coordinate(randomX, randomy);
+                var minedCoordinate = new Coordinate(randomX, randomY);
                 Point pointCandidate = _points[minedCoordinate];
 
                 if (pointCandidate.HasMine == false)

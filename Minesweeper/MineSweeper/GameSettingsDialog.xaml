@@ -1,0 +1,56 @@
+﻿<Window x:Class="Minesweeper.GameSettingsDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Minesweeper"
+        mc:Ignorable="d"
+        Title="GameSettingsDialog" SizeToContent="WidthAndHeight">
+    <Window.Resources>
+        <local:BoolFlipConverter x:Key="BoolFlipConverter"/>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" Grid.Column="0" Content="Difficulty" Margin="5,0,0,0"></Label>
+        <RadioButton Grid.Row="1" Grid.Column="0" Content="Beginner" GroupName="SelectedDifficulty" Checked="DifficultyRadioButton_Checked" HorizontalAlignment="Left" IsChecked="True" Margin="5,0,0,11"/>
+        <RadioButton Grid.Row="2" Grid.Column="0" Content="Intermediate" GroupName="SelectedDifficulty" Checked="DifficultyRadioButton_Checked" VerticalAlignment="Top" Margin="5,0,0,0"/>
+        <RadioButton Grid.Row="3" Grid.Column="0" Content="Expert" GroupName="SelectedDifficulty" Checked="DifficultyRadioButton_Checked" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,0,0,0"/>
+        <RadioButton x:Name="radioButton" Grid.Row="4" Grid.Column="0" Content="Custom" GroupName="SelectedDifficulty" Checked="DifficultyRadioButton_Checked" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,0,0,0"/>
+
+
+        <Label Grid.Row="0" Grid.Column="1" Content="Height"></Label>
+        <Label Grid.Row="1" Grid.Column="1" Content="9" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <Label Grid.Row="2" Grid.Column="1" Content="16" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <Label Grid.Row="3" Grid.Column="1" Content="16" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <TextBox x:Name="customHeight" Grid.Row="4" Grid.Column="1" Text="9" VerticalAlignment="Top" Margin="0" Width="Auto" TextAlignment="Center" PreviewTextInput="NumericOnlyPreviewTextInput" IsReadOnly="{Binding IsChecked, Converter={StaticResource BoolFlipConverter}, ElementName=radioButton}"/>
+
+        <Label Grid.Row="0" Grid.Column="2" Content="Width"></Label>
+        <Label Grid.Row="1" Grid.Column="2" Content="9" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <Label Grid.Row="2" Grid.Column="2" Content="16" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <Label Grid.Row="3" Grid.Column="2" Content="30" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <TextBox x:Name="customWidth" Grid.Row="4" Grid.Column="2" Text="9" VerticalAlignment="Top" TextAlignment="Center" PreviewTextInput="NumericOnlyPreviewTextInput" IsReadOnly="{Binding IsChecked, Converter={StaticResource BoolFlipConverter}, ElementName=radioButton}"/>
+
+        <Label Grid.Row="0" Grid.Column="3" Content="Mines"></Label>
+        <Label Grid.Row="1" Grid.Column="3" Content="10" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <Label Grid.Row="2" Grid.Column="3" Content="40" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <Label Grid.Row="3" Grid.Column="3" Content="99" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <TextBox x:Name="customMines" Grid.Row="4" Grid.Column="3" Text="10" VerticalAlignment="Top" Width="Auto" TextAlignment="Center" PreviewTextInput="NumericOnlyPreviewTextInput" IsReadOnly="{Binding IsChecked, Converter={StaticResource BoolFlipConverter}, ElementName=radioButton}"/>
+
+        <Button IsDefault="True" x:Name="saveButton" Grid.Row="5" Grid.Column="0" Content="Save" Click="SaveButton_Click" Margin="5"/>
+        <Button IsCancel="True" x:Name="cancelButton" Grid.Row="5" Grid.Column="3" Content="Cancel" Margin="5"/>
+    </Grid>
+</Window>
