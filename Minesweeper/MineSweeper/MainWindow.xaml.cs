@@ -186,6 +186,14 @@ namespace Minesweeper
                 _gameDifficulty = gameDialog.SelectedDifficulty;
                 _gameSettings = GameSettingsUtils.GetGameSettingsFromDifficulty(_gameDifficulty);
 
+                if (_gameDifficulty == GameDifficulty.Custom)
+                {
+                    _gameSettings = GameSettingsUtils.GetGameSettingsFromDifficulty(_gameDifficulty,
+                        int.Parse(gameDialog.customWidth.Text), 
+                        int.Parse(gameDialog.customHeight.Text), 
+                        int.Parse(gameDialog.customMines.Text));
+                }
+
                 SetupNewBoard();
             }
         }

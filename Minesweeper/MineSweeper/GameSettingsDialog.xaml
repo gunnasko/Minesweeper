@@ -28,24 +28,24 @@
         <RadioButton Grid.Row="3" Grid.Column="0" Content="Expert" GroupName="SelectedDifficulty" Checked="DifficultyRadioButton_Checked" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <RadioButton Grid.Row="4" Grid.Column="0" Content="Custom" GroupName="SelectedDifficulty" Checked="DifficultyRadioButton_Checked" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
-        
+
         <Label Grid.Row="0" Grid.Column="1" Content="Height"></Label>
         <Label Grid.Row="1" Grid.Column="1" Content="9" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <Label Grid.Row="2" Grid.Column="1" Content="16" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <Label Grid.Row="3" Grid.Column="1" Content="16" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <TextBox Grid.Row="4" Grid.Column="1" Text="9" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBox x:Name="customHeight" Grid.Row="4" Grid.Column="1" Text="9" VerticalAlignment="Top" Margin="0,0,34,0"/>
 
         <Label Grid.Row="0" Grid.Column="2" Content="Width"></Label>
         <Label Grid.Row="1" Grid.Column="2" Content="9" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <Label Grid.Row="2" Grid.Column="2" Content="16" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <Label Grid.Row="3" Grid.Column="2" Content="30" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <TextBox Grid.Row="4" Grid.Column="2" Text="9" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBox x:Name="customWidth" Grid.Row="4" Grid.Column="2" Text="9" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
         <Label Grid.Row="0" Grid.Column="3" Content="Mines"></Label>
         <Label Grid.Row="1" Grid.Column="3" Content="10" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <Label Grid.Row="2" Grid.Column="3" Content="40" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <Label Grid.Row="3" Grid.Column="3" Content="99" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <TextBox Grid.Row="4" Grid.Column="3" Text="10" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto"/>
+        <TextBox x:Name="customMines" Grid.Row="4" Grid.Column="3" Text="10" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto"/>
 
         <Button IsDefault="True" x:Name="saveButton" Grid.Row="5" Grid.Column="0" Content="Save" Click="SaveButton_Click"/>
         <Button IsCancel="True" x:Name="cancelButton" Grid.Row="5" Grid.Column="3" Content="Cancel"/>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +21,7 @@ namespace Minesweeper
     public partial class GameSettingsDialog : Window
     {
         public GameDifficulty SelectedDifficulty { get; set; }
+
         public GameSettingsDialog()
         {
             InitializeComponent();
@@ -39,5 +41,4 @@ namespace Minesweeper
             }
         }
     }
-
 }
