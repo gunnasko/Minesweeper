@@ -43,33 +43,7 @@ namespace Minesweeper
                 for (int y = 0; y < _board.ColumnSize; y++)
                 {
                     Point point = _board.AccessPoint(new Coordinate(x, y));
-                    Button pointButton = new Button();
-                    pointButton.Click += OnPointButtonClicked;
-
-                    //We bind IsOpened to set the style on pointbutton when it is opened.
-                    Binding isOpenedStyleBinding = new Binding("IsOpened");
-                    isOpenedStyleBinding.Converter = new OpenedPointStyleConvert();
-                    isOpenedStyleBinding.Source = point;
-                    pointButton.SetBinding(Button.StyleProperty, isOpenedStyleBinding);
-
-
-                    //We add empty binding so that we can access all properties in Point in convert function
-                    Binding emptyContentBinding = new Binding("");
-                    emptyContentBinding.Source = point;
-
-                    //We add IsOpened binding so that convert is called everytime IsOpened changes
-                    Binding isOpenedContentBinding = new Binding("IsOpened");
-                    isOpenedContentBinding.Source = point;
-
-                    MultiBinding contentMultiBinding = new MultiBinding();
-
-                    contentMultiBinding.Bindings.Add(emptyContentBinding);
-                    contentMultiBinding.Bindings.Add(isOpenedContentBinding);
-                    contentMultiBinding.Converter = new OpenedPointContentConvert();
-                    pointButton.SetBinding(Button.ContentProperty, contentMultiBinding);
-
-                    //We save point data so we can access it in callbacks from button click.
-                    pointButton.DataContext = point;
+                    Button pointButton = CreateNewPointButton(point);
 
                     Grid.SetRow(pointButton, x);
                     Grid.SetColumn(pointButton, y);
@@ -78,18 +52,69 @@ namespace Minesweeper
             }
         }
 
-        public void OnPointButtonClicked(object sender, RoutedEventArgs e)
+        private Button CreateNewPointButton(Point point)
+        {
+            Button pointButton = new Button();
+            pointButton.Click += PointButton_MouseLeftClick;
+            pointButton.MouseRightButtonUp += PointButton_MouseRightButtonUp;
+            SetupPointButtonBindings(point, pointButton);
+
+            pointButton.DataContext = point;
+            return pointButton;
+        }
+
+        private void PointButton_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
             var button = (Button)sender;
             var point = button.DataContext as Point;
-            try
-            {
-                _board.OpenPoint(point.PointCoordinate);
-            }
-            catch (ArgumentException)
-            {
-                //Do nothing
-            }
+
+            bool currentFlag = _board.PointIsFlagged(point.PointCoordinate);
+            _board.FlagPoint(point.PointCoordinate, !currentFlag);
+        }
+
+        private void PointButton_MouseLeftClick(object sender, RoutedEventArgs e)
+        {
+            var button = (Button)sender;
+            var point = button.DataContext as Point;
+
+            _board.OpenPoint(point.PointCoordinate);
+        }
+
+        private static void SetupPointButtonBindings(Point point, Button pointButton)
+        {
+            SetupStyleBinding(point, pointButton);
+            SetupContentBinding(point, pointButton);
+        }
+
+        private static void SetupContentBinding(Point point, Button pointButton)
+        {
+			//We add empty binding so that we can access all properties in Point in convert function
+            Binding emptyContentBinding = new Binding("");
+            emptyContentBinding.Source = point;
+ 			//We add IsOpened binding so that convert is called everytime IsOpened changes
+	        Binding isOpenedContentBinding = new Binding("IsOpened");
+	        isOpenedContentBinding.Source = point;
+
+            //We add IsFlagged binding so that convert is called everytime IsFlagged changes
+            Binding isFlaggedContentBinding = new Binding("IsFlagged");
+            isFlaggedContentBinding.Source = point;
+
+            MultiBinding contentMultiBinding = new MultiBinding();
+	        contentMultiBinding.Bindings.Add(emptyContentBinding);
+	        contentMultiBinding.Bindings.Add(isOpenedContentBinding);
+            contentMultiBinding.Bindings.Add(isFlaggedContentBinding);
+	        contentMultiBinding.Converter = new OpenedPointContentConvert();
+	        pointButton.SetBinding(Button.ContentProperty, contentMultiBinding);
+        }
+
+        private static void SetupStyleBinding(Point point, Button pointButton)
+        {
+	        //We bind IsOpened to set the style on pointbutton when it is opened.
+	        Binding isOpenedStyleBinding = new Binding("IsOpened");
+	        isOpenedStyleBinding.Converter = new OpenedPointStyleConvert();
+	        isOpenedStyleBinding.Source = point;
+	        pointButton.SetBinding(Button.StyleProperty, isOpenedStyleBinding);
+
         }
     }
 
@@ -112,18 +137,32 @@ namespace Minesweeper
         {
             var query = (from v in values where v.GetType() == typeof(Point) select v);
             var point = query.First() as Point;
-            if (point == null || !point.IsOpened)
+            if (point == null)
             {
                 return "";
             }
 
-            if (point.HasMine)
+            if (!point.IsOpened)
             {
-                return "X";
+                if (point.IsFlagged)
+                {
+                    return "F";
+                }
+                else
+                {
+                    return "";
+                }
             }
-            else if (point.AdjacentMines > 0)
+            else
             {
-                return point.AdjacentMines.ToString();
+                if (point.HasMine)
+                {
+                    return "X";
+                }
+                else if (point.AdjacentMines > 0)
+                {
+                    return point.AdjacentMines.ToString();
+                }
             }
             return "";
         }

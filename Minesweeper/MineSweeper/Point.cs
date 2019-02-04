@@ -9,20 +9,38 @@ namespace Minesweeper
 {
     public class Point : INotifyPropertyChanged
     {
-        private bool isOpened;
+        private bool _isOpened;
+        private bool _isFlagged;
+        public bool IsFlagged
+        {
+            get
+            {
+                return _isFlagged;
+            }
+            set
+            {
+                if (_isFlagged != value)
+                {
+                    _isFlagged = value;
+                    OnPropertyChanged("IsFlagged");
+                }
+            }
+        }
         public bool HasMine { get; set; }
-        public bool IsFlagged { get; set; }
         public Coordinate PointCoordinate { get; }
         public bool IsOpened
         {
             get
             {
-                return isOpened;
+                return _isOpened;
             }
             set
             {
-                isOpened = value;
-                OnPropertyChanged("IsOpened");
+                if (_isOpened != value)
+                {
+                    _isOpened = value;
+                    OnPropertyChanged("IsOpened");
+                }
             }
         }
 
@@ -37,11 +55,7 @@ namespace Minesweeper
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string info)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(info));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
         }
     }
 }
