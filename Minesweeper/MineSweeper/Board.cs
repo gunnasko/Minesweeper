@@ -177,7 +177,7 @@ namespace Minesweeper
             return (numOfUnopenedPoints <= NumberOfMines);
         }
 
-        public void ShowAllMines()
+        private void ShowAllMines()
         {
             var query = from p in _points where p.Value.HasMine == true select p;
             foreach (var val in query)
@@ -211,6 +211,11 @@ namespace Minesweeper
                     //Warning, recursion!
                     OpenNeighbourPoints(point);
                 }
+            }
+            //Lost the game, show all mines!
+            else
+            {
+                ShowAllMines();
             }
 
             return new BoardActionResult

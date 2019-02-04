@@ -208,6 +208,20 @@ namespace Minesweeper.Tests
             Assert.IsFalse(board.HasWonGame());
         }
 
+        [TestMethod]
+        public void WhenLosingAllMinesShouldBeOpened()
+        {
+            Board board = BoardUtils.CreateCheckerboardTestBoard(3, 3);
+            //Open a mine
+            board.OpenPoint(0, 0);
+            Assert.IsFalse(board.HasWonGame());
+            //Other mine points should be open
+            Assert.IsTrue(board.PointIsOpen(0, 2));
+            Assert.IsTrue(board.PointIsOpen(1, 1));
+
+        }
+
+
 
 
 
