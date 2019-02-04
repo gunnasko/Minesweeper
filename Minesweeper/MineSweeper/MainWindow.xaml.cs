@@ -113,6 +113,7 @@ namespace Minesweeper
         private void GameLost()
         {
             StatusTextBox.Text = "Lost!";
+            _board.ShowAllMines();
             FreezeBoardGrid();
         }
 
