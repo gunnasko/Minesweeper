@@ -55,12 +55,29 @@ namespace Minesweeper
         private Button CreateNewPointButton(Point point)
         {
             Button pointButton = new Button();
-            pointButton.Click += OnPointButtonClicked;
-
+            pointButton.Click += PointButton_MouseLeftClick;
+            pointButton.MouseRightButtonUp += PointButton_MouseRightButtonUp;
             SetupPointButtonBindings(point, pointButton);
 
             pointButton.DataContext = point;
             return pointButton;
+        }
+
+        private void PointButton_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            var button = (Button)sender;
+            var point = button.DataContext as Point;
+
+            bool currentFlag = _board.PointIsFlagged(point.PointCoordinate);
+            _board.FlagPoint(point.PointCoordinate, !currentFlag);
+        }
+
+        private void PointButton_MouseLeftClick(object sender, RoutedEventArgs e)
+        {
+            var button = (Button)sender;
+            var point = button.DataContext as Point;
+
+            _board.OpenPoint(point.PointCoordinate);
         }
 
         private static void SetupPointButtonBindings(Point point, Button pointButton)
@@ -78,9 +95,14 @@ namespace Minesweeper
 	        Binding isOpenedContentBinding = new Binding("IsOpened");
 	        isOpenedContentBinding.Source = point;
 
-	        MultiBinding contentMultiBinding = new MultiBinding();
+            //We add IsFlagged binding so that convert is called everytime IsFlagged changes
+            Binding isFlaggedContentBinding = new Binding("IsFlagged");
+            isFlaggedContentBinding.Source = point;
+
+            MultiBinding contentMultiBinding = new MultiBinding();
 	        contentMultiBinding.Bindings.Add(emptyContentBinding);
 	        contentMultiBinding.Bindings.Add(isOpenedContentBinding);
+            contentMultiBinding.Bindings.Add(isFlaggedContentBinding);
 	        contentMultiBinding.Converter = new OpenedPointContentConvert();
 	        pointButton.SetBinding(Button.ContentProperty, contentMultiBinding);
         }
@@ -93,20 +115,6 @@ namespace Minesweeper
 	        isOpenedStyleBinding.Source = point;
 	        pointButton.SetBinding(Button.StyleProperty, isOpenedStyleBinding);
 
-        }
-
-        public void OnPointButtonClicked(object sender, RoutedEventArgs e)
-        {
-            var button = (Button)sender;
-            var point = button.DataContext as Point;
-            try
-            {
-                _board.OpenPoint(point.PointCoordinate);
-            }
-            catch (ArgumentException)
-            {
-                //Do nothing
-            }
         }
     }
 
@@ -129,18 +137,32 @@ namespace Minesweeper
         {
             var query = (from v in values where v.GetType() == typeof(Point) select v);
             var point = query.First() as Point;
-            if (point == null || !point.IsOpened)
+            if (point == null)
             {
                 return "";
             }
 
-            if (point.HasMine)
+            if (!point.IsOpened)
             {
-                return "X";
+                if (point.IsFlagged)
+                {
+                    return "F";
+                }
+                else
+                {
+                    return "";
+                }
             }
-            else if (point.AdjacentMines > 0)
+            else
             {
-                return point.AdjacentMines.ToString();
+                if (point.HasMine)
+                {
+                    return "X";
+                }
+                else if (point.AdjacentMines > 0)
+                {
+                    return point.AdjacentMines.ToString();
+                }
             }
             return "";
         }
