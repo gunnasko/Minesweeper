@@ -105,7 +105,7 @@ namespace Minesweeper.Tests
         }
 
         [TestMethod]
-        public void OpeningAPointWithNoAdjacentMinesAutoOpensAllNeighboursWithNoAdjacentMines()
+        public void OpeningAPointWithNoAdjacentMinesAutoOpensNeighboursUntilAdjacentMineIsFound()
         {
             Board board = BoardUtils.CreateSingleMineTopRightBoard(4, 4);
             Assert.AreEqual(true, board.PointHasMine(0, 3));
@@ -115,15 +115,19 @@ namespace Minesweeper.Tests
             Assert.AreEqual(true, board.PointIsOpen(1, 1));
 
             //Expect the points twowards topright to not be open because they have adjacent mines
-            Assert.AreEqual(false, board.PointIsOpen(1, 2));
-            Assert.AreEqual(false, board.PointIsOpen(0, 2));
-            Assert.AreEqual(false, board.PointIsOpen(1, 3));
+            Assert.AreEqual(true, board.PointIsOpen(1, 2));
+            Assert.AreEqual(true, board.PointIsOpen(0, 2));
+            Assert.AreEqual(true, board.PointIsOpen(1, 3));
 
             //Sample a bunch of other points that are not adjacent to top right mine.
             Assert.AreEqual(true, board.PointIsOpen(0, 0));
             Assert.AreEqual(true, board.PointIsOpen(1, 0));
             Assert.AreEqual(true, board.PointIsOpen(3, 0));
             Assert.AreEqual(true, board.PointIsOpen(3, 3));
+
+            //Check we have not opened the mine
+            Assert.AreEqual(false, board.PointIsOpen(0, 3));
+
         }
 
         [TestMethod]

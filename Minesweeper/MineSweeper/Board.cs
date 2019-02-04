@@ -16,10 +16,12 @@ namespace Minesweeper
     public class Board
     {
         private Dictionary<Coordinate, Point> points;
-        private int numOfColumns;
-        private int numOfRows;
-        private int numOfMines;
         private int addedMines = 0;
+
+        public int ColumnSize { get; }
+        public int RowSize { get; }
+        public int NumberOfMines { get; }
+
         Random randomGenerator;
 
         public Board(int boardColumnSize, int boardRowSize, int numOfMinesInGames)
@@ -40,9 +42,9 @@ namespace Minesweeper
             }
 
             points = new Dictionary<Coordinate, Point>();
-            numOfColumns = boardColumnSize;
-            numOfRows = boardRowSize;
-            numOfMines = numOfMinesInGames;
+            ColumnSize = boardColumnSize;
+            RowSize = boardRowSize;
+            NumberOfMines = numOfMinesInGames;
 
             randomGenerator = new Random();
             FillPoints();
@@ -54,16 +56,19 @@ namespace Minesweeper
         }
 
         //Used for testing
-        public Board(Dictionary<Coordinate, Point> mockedDict)
+        public Board(int boardColumnSize, int boardRowSize, Dictionary<Coordinate, Point> mockedDict)
         {
+            ColumnSize = boardColumnSize;
+            RowSize = boardRowSize;
+
             points = mockedDict;
         }
 
         private void FillPoints()
         {
-            for (int x = 0; x < numOfRows; x++)
+            for (int x = 0; x < RowSize; x++)
             {
-                for (int y = 0; y < numOfColumns; y++)
+                for (int y = 0; y < ColumnSize; y++)
                 {
                     var coordinate = new Coordinate(newX: x, newY: y);
                     var point = new Point(coordinate);
@@ -76,10 +81,10 @@ namespace Minesweeper
         {
             addedMines = 0;
 
-            while (addedMines < numOfMines)
+            while (addedMines < NumberOfMines)
             {
-                int randomX = randomGenerator.Next(numOfColumns);
-                int randomy = randomGenerator.Next(numOfRows);
+                int randomX = randomGenerator.Next(ColumnSize);
+                int randomy = randomGenerator.Next(RowSize);
 
                 var minedCoordinate = new Coordinate(randomX, randomy);
                 Point pointCandidate = points[minedCoordinate];
@@ -92,7 +97,7 @@ namespace Minesweeper
             }
         }
 
-        private Point AccessPoint(Coordinate coordinate)
+        public Point AccessPoint(Coordinate coordinate)
         {
             try
             {
@@ -154,18 +159,20 @@ namespace Minesweeper
         {
             Point point = AccessPoint(coordinate);
 
+            Console.WriteLine($"Attempting to open point {coordinate.x},{coordinate.y}");
             if (point.IsOpened)
             {
                 throw new ArgumentException("Cannot open point that is already opened!");
             }
 
+            point.AdjacentMines = CalculateAdjacentMines(point.PointCoordinate);
+
             point.IsOpened = true;
 
-            int adjacentMines = 0;
             if (!point.HasMine)
             {
-                adjacentMines = CalculateAdjacentMines(point.PointCoordinate);
-                if (adjacentMines == 0)
+
+                if (point.AdjacentMines == 0)
                 {
                     //Warning, recursion!
                     OpenNeighbourPoints(point);
@@ -174,7 +181,7 @@ namespace Minesweeper
 
             return new BoardActionResult
             {
-                AdjacentMines = adjacentMines,
+                AdjacentMines = point.AdjacentMines,
                 SteppedOnMine = point.HasMine
             };
         }
@@ -186,8 +193,8 @@ namespace Minesweeper
             {
                 try
                 {
-                    int adjacentMines = CalculateAdjacentMines(neighbourCoord);
-                    if (adjacentMines == 0)
+                    Point neighbourPoint = AccessPoint(neighbourCoord);
+                    if (!neighbourPoint.IsOpened)
                     {
                         OpenPoint(neighbourCoord);
                     }
@@ -203,6 +210,17 @@ namespace Minesweeper
             }
         }
 
+        private void AddCoordinateIfValid(int pointX, int pointY, List<Coordinate> coordinateList)
+        {
+            if (pointX >= RowSize || pointY >= ColumnSize
+                || pointX < 0 || pointY < 0)
+            {
+                return;
+            }
+            coordinateList.Add(new Coordinate(pointX, pointY));
+        }
+
+
         private List<Coordinate> GetNeighborCoordinates(Coordinate sentralCoordinate)
         {
             int pointX = sentralCoordinate.x;
@@ -210,16 +228,16 @@ namespace Minesweeper
 
             var neighbourCoordinates = new List<Coordinate>();
 
-            neighbourCoordinates.Add(new Coordinate(pointX + 1, pointY));
-            neighbourCoordinates.Add(new Coordinate(pointX, pointY + 1));
-            neighbourCoordinates.Add(new Coordinate(pointX + 1, pointY + 1));
+            AddCoordinateIfValid(pointX + 1, pointY, neighbourCoordinates);
+            AddCoordinateIfValid(pointX, pointY + 1, neighbourCoordinates);
+            AddCoordinateIfValid(pointX + 1, pointY + 1, neighbourCoordinates);
 
-            neighbourCoordinates.Add(new Coordinate(pointX - 1, pointY));
-            neighbourCoordinates.Add(new Coordinate(pointX, pointY - 1));
-            neighbourCoordinates.Add(new Coordinate(pointX - 1, pointY - 1));
+            AddCoordinateIfValid(pointX - 1, pointY, neighbourCoordinates);
+            AddCoordinateIfValid(pointX, pointY - 1, neighbourCoordinates);
+            AddCoordinateIfValid(pointX - 1, pointY - 1, neighbourCoordinates);
 
-            neighbourCoordinates.Add(new Coordinate(pointX + 1, pointY - 1));
-            neighbourCoordinates.Add(new Coordinate(pointX - 1, pointY + 1));
+            AddCoordinateIfValid(pointX + 1, pointY - 1, neighbourCoordinates);
+            AddCoordinateIfValid(pointX - 1, pointY + 1, neighbourCoordinates);
 
             return neighbourCoordinates;
         }
@@ -244,7 +262,7 @@ namespace Minesweeper
                     //Do nothing. We just do not want to update mine counter.
                 }
             }
-
+            var centerPoint = AccessPoint(sentralCoordinate);
             return adjacentMineCounter;
         }
     }
