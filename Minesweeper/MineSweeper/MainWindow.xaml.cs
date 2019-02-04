@@ -33,7 +33,7 @@ namespace Minesweeper
         private void SetupNewBoard()
         {
             ResetBoardGrid();
-
+            StatusTextBox.Text = "Running...";
             _board = new Board();
             for (int x = 0; x < _board.RowSize; x++)
             {
@@ -91,7 +91,42 @@ namespace Minesweeper
             var button = (Button)sender;
             var point = button.DataContext as Point;
 
-            _board.OpenPoint(point.PointCoordinate);
+            BoardActionResult result = _board.OpenPoint(point.PointCoordinate);
+            
+            if (result.SteppedOnMine)
+            {
+                GameLost();
+            }
+            else if (_board.HasWonGame())
+            {
+                GameWon();
+            }
+        }
+
+        private void GameLost()
+        {
+            StatusTextBox.Text = "Lost!";
+            FreezeBoardGrid();
+        }
+
+        private void GameWon()
+        {
+            StatusTextBox.Text = "Won!";
+            FreezeBoardGrid();
+        }
+
+
+        private void FreezeBoardGrid()
+        {
+            foreach (var child in boardGrid.Children)
+            {
+                var button = child as Button;
+                if (button != null)
+                {
+                    button.Click -= PointButton_MouseLeftClick;
+                    button.MouseRightButtonUp -= PointButton_MouseRightButtonUp;
+                }
+            }
         }
 
         private static void SetupPointButtonBindings(Point point, Button pointButton)

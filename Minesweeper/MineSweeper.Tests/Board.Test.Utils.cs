@@ -11,7 +11,6 @@ namespace Minesweeper.Tests
         public static Board CreateSingleMineTopRightBoard(int numOfRows, int numOfColumns)
         {
             var mockPoints = new Dictionary<Coordinate, Point>();
-
             for (int x = 0; x < numOfRows; x++)
             {
                 for (int y = 0; y < numOfColumns; y++)
@@ -24,7 +23,8 @@ namespace Minesweeper.Tests
             }
             var topRightCoord = new Coordinate(newX: 0, newY: numOfColumns - 1);
             mockPoints[topRightCoord].HasMine = true;
-            return new Board(numOfColumns ,numOfRows, mockPoints);
+            int numOfMines = 1;
+            return new Board(numOfColumns ,numOfRows, numOfMines, mockPoints);
         }
 
 
@@ -39,7 +39,7 @@ namespace Minesweeper.Tests
             var mockPoints = new Dictionary<Coordinate, Point>();
 
             bool mineSwitcher = true;
-
+            int numOfMines = 0;
             for (int x = 0; x < numOfRows; x++)
             {
                 for (int y = 0; y < numOfColumns; y++)
@@ -49,14 +49,18 @@ namespace Minesweeper.Tests
                     if (mineSwitcher)
                     {
                         point.HasMine = true;
+                        numOfMines++;
                     }
                     mineSwitcher = !mineSwitcher;
                     mockPoints[coordinate] = point;
                 }
-                //Switch between each row for checkerboard effect
-                mineSwitcher = !mineSwitcher;
+                //Switch between each row for checkerboard effect if columns are even.
+                if ((numOfColumns % 2) == 0)
+                {
+                    mineSwitcher = !mineSwitcher;
+                }
             }
-            return new Board(numOfColumns, numOfRows, mockPoints);
+            return new Board(numOfColumns, numOfRows, numOfMines, mockPoints);
         }
     }
 }

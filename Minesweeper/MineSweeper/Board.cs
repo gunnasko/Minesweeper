@@ -11,17 +11,17 @@ namespace Minesweeper
         public bool SteppedOnMine { get; set; }
     }
 
-
     public class Board
     {
-        private Dictionary<Coordinate, Point> points;
-        private int addedMines = 0;
+        private Dictionary<Coordinate, Point> _points;
+        private int _addedMines = 0;
 
         public int ColumnSize { get; }
         public int RowSize { get; }
         public int NumberOfMines { get; }
 
-        Random randomGenerator;
+
+        Random _randomGenerator;
 
         public Board(int boardColumnSize, int boardRowSize, int numOfMinesInGames)
         {
@@ -40,12 +40,12 @@ namespace Minesweeper
                 throw new ArgumentOutOfRangeException("Number of mines cannot be larger than possible number of points");
             }
 
-            points = new Dictionary<Coordinate, Point>();
+            _points = new Dictionary<Coordinate, Point>();
             ColumnSize = boardColumnSize;
             RowSize = boardRowSize;
             NumberOfMines = numOfMinesInGames;
 
-            randomGenerator = new Random();
+            _randomGenerator = new Random();
             FillPoints();
             AddMines();
         }
@@ -55,12 +55,12 @@ namespace Minesweeper
         }
 
         //Used for testing
-        public Board(int boardColumnSize, int boardRowSize, Dictionary<Coordinate, Point> mockedDict)
+        public Board(int boardColumnSize, int boardRowSize, int numOfMinesInGames, Dictionary<Coordinate, Point> mockedDict)
         {
             ColumnSize = boardColumnSize;
             RowSize = boardRowSize;
-
-            points = mockedDict;
+            NumberOfMines = numOfMinesInGames;
+            _points = mockedDict;
         }
 
         private void FillPoints()
@@ -71,27 +71,27 @@ namespace Minesweeper
                 {
                     var coordinate = new Coordinate(newX: x, newY: y);
                     var point = new Point(coordinate);
-                    points[coordinate] = (point);
+                    _points[coordinate] = (point);
                 }
             }
         }
 
         private void AddMines()
         {
-            addedMines = 0;
+            _addedMines = 0;
 
-            while (addedMines < NumberOfMines)
+            while (_addedMines < NumberOfMines)
             {
-                int randomX = randomGenerator.Next(ColumnSize);
-                int randomy = randomGenerator.Next(RowSize);
+                int randomX = _randomGenerator.Next(ColumnSize);
+                int randomy = _randomGenerator.Next(RowSize);
 
                 var minedCoordinate = new Coordinate(randomX, randomy);
-                Point pointCandidate = points[minedCoordinate];
+                Point pointCandidate = _points[minedCoordinate];
 
                 if (pointCandidate.HasMine == false)
                 {
                     pointCandidate.HasMine = true;
-                    addedMines++;
+                    _addedMines++;
                 }
             }
         }
@@ -105,7 +105,7 @@ namespace Minesweeper
         {
             try
             {
-                return points[coordinate];
+                return _points[coordinate];
             }
             catch (KeyNotFoundException)
             {
@@ -158,6 +158,17 @@ namespace Minesweeper
             return OpenPoint(new Coordinate(newX: x, newY: y));
         }
 
+        public bool HasWonGame()
+        {
+            bool hasOpenedMine = (from p in _points where (p.Value.IsOpened == true && p.Value.HasMine == true) select p).Count() > 0;
+            if (hasOpenedMine)
+            {
+                return false;
+            }
+
+            int numOfUnopenedPoints = (from p in _points where p.Value.IsOpened == false select p).Count();
+            return (numOfUnopenedPoints <= NumberOfMines);
+        }
 
         public BoardActionResult OpenPoint(Coordinate coordinate)
         {
