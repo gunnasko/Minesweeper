@@ -43,39 +43,56 @@ namespace Minesweeper
                 for (int y = 0; y < _board.ColumnSize; y++)
                 {
                     Point point = _board.AccessPoint(new Coordinate(x, y));
-                    Button pointButton = new Button();
-                    pointButton.Click += OnPointButtonClicked;
-
-                    //We bind IsOpened to set the style on pointbutton when it is opened.
-                    Binding isOpenedStyleBinding = new Binding("IsOpened");
-                    isOpenedStyleBinding.Converter = new OpenedPointStyleConvert();
-                    isOpenedStyleBinding.Source = point;
-                    pointButton.SetBinding(Button.StyleProperty, isOpenedStyleBinding);
-
-
-                    //We add empty binding so that we can access all properties in Point in convert function
-                    Binding emptyContentBinding = new Binding("");
-                    emptyContentBinding.Source = point;
-
-                    //We add IsOpened binding so that convert is called everytime IsOpened changes
-                    Binding isOpenedContentBinding = new Binding("IsOpened");
-                    isOpenedContentBinding.Source = point;
-
-                    MultiBinding contentMultiBinding = new MultiBinding();
-
-                    contentMultiBinding.Bindings.Add(emptyContentBinding);
-                    contentMultiBinding.Bindings.Add(isOpenedContentBinding);
-                    contentMultiBinding.Converter = new OpenedPointContentConvert();
-                    pointButton.SetBinding(Button.ContentProperty, contentMultiBinding);
-
-                    //We save point data so we can access it in callbacks from button click.
-                    pointButton.DataContext = point;
+                    Button pointButton = CreateNewPointButton(point);
 
                     Grid.SetRow(pointButton, x);
                     Grid.SetColumn(pointButton, y);
                     boardGrid.Children.Add(pointButton);
                 }
             }
+        }
+
+        private Button CreateNewPointButton(Point point)
+        {
+            Button pointButton = new Button();
+            pointButton.Click += OnPointButtonClicked;
+
+            SetupPointButtonBindings(point, pointButton);
+
+            pointButton.DataContext = point;
+            return pointButton;
+        }
+
+        private static void SetupPointButtonBindings(Point point, Button pointButton)
+        {
+            SetupStyleBinding(point, pointButton);
+            SetupContentBinding(point, pointButton);
+        }
+
+        private static void SetupContentBinding(Point point, Button pointButton)
+        {
+			//We add empty binding so that we can access all properties in Point in convert function
+            Binding emptyContentBinding = new Binding("");
+            emptyContentBinding.Source = point;
+ 			//We add IsOpened binding so that convert is called everytime IsOpened changes
+	        Binding isOpenedContentBinding = new Binding("IsOpened");
+	        isOpenedContentBinding.Source = point;
+
+	        MultiBinding contentMultiBinding = new MultiBinding();
+	        contentMultiBinding.Bindings.Add(emptyContentBinding);
+	        contentMultiBinding.Bindings.Add(isOpenedContentBinding);
+	        contentMultiBinding.Converter = new OpenedPointContentConvert();
+	        pointButton.SetBinding(Button.ContentProperty, contentMultiBinding);
+        }
+
+        private static void SetupStyleBinding(Point point, Button pointButton)
+        {
+	        //We bind IsOpened to set the style on pointbutton when it is opened.
+	        Binding isOpenedStyleBinding = new Binding("IsOpened");
+	        isOpenedStyleBinding.Converter = new OpenedPointStyleConvert();
+	        isOpenedStyleBinding.Source = point;
+	        pointButton.SetBinding(Button.StyleProperty, isOpenedStyleBinding);
+
         }
 
         public void OnPointButtonClicked(object sender, RoutedEventArgs e)
