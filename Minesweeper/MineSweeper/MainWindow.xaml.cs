@@ -173,15 +173,15 @@ namespace Minesweeper
 
         }
 
-        private void RestartButton_Click(object sender, RoutedEventArgs e)
+        private void RestartGameMenu_Click(object sender, RoutedEventArgs e)
         {
             SetupNewBoard();
         }
 
-        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        private void SettingsMenu_Click(object sender, RoutedEventArgs e)
         {
             var gameDialog = new GameSettingsDialog();
-            if(gameDialog.ShowDialog() == true)
+            if (gameDialog.ShowDialog() == true)
             {
                 _gameDifficulty = gameDialog.SelectedDifficulty;
                 _gameSettings = GameSettingsUtils.GetGameSettingsFromDifficulty(_gameDifficulty);
@@ -189,8 +189,8 @@ namespace Minesweeper
                 if (_gameDifficulty == GameDifficulty.Custom)
                 {
                     _gameSettings = GameSettingsUtils.GetGameSettingsFromDifficulty(_gameDifficulty,
-                        int.Parse(gameDialog.customWidth.Text), 
-                        int.Parse(gameDialog.customHeight.Text), 
+                        int.Parse(gameDialog.customWidth.Text),
+                        int.Parse(gameDialog.customHeight.Text),
                         int.Parse(gameDialog.customMines.Text));
                 }
 
