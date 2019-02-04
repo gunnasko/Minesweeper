@@ -19,6 +19,16 @@ namespace Minesweeper.Tests
             int mineCounter = CountNumberOfMines(numOfColumns, numOfRows, board);
             Assert.AreEqual(numOfMines, mineCounter);
         }
+
+        [TestMethod]
+        public void CanCreateNonSquareBoards()
+        {
+            int numOfColumns = 16;
+            int numOfRows = 30;
+            int numOfMines = 99;
+            var board = new Board(numOfColumns, numOfRows, numOfMines);
+        }
+
         private static int CountNumberOfMines(int numOfColumns, int numOfRows, Board board)
         {
             int mineCounter = 0;

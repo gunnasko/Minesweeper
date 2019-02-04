@@ -22,11 +22,12 @@ namespace Minesweeper
     public partial class MainWindow : Window
     {
         private Board _board;
-        private GameDifficulty _gameDifficulty;
-        private GameSettings _customGameSettings;
+        private GameSettings _gameSettings;
+        private GameDifficulty _gameDifficulty = GameDifficulty.Beginner;
 
         public MainWindow()
         {
+            _gameSettings = GameSettingsUtils.GetGameSettingsFromDifficulty(_gameDifficulty);
             InitializeComponent();
 
             //Currently use default values
@@ -37,7 +38,7 @@ namespace Minesweeper
         {
             ResetBoardGrid();
             StatusTextBox.Text = "Running...";
-            _board = new Board();
+            _board = new Board(_gameSettings);
             for (int x = 0; x < _board.RowSize; x++)
             {
                 boardGrid.RowDefinitions.Add(new RowDefinition());
@@ -172,6 +173,18 @@ namespace Minesweeper
         private void RestartButton_Click(object sender, RoutedEventArgs e)
         {
             SetupNewBoard();
+        }
+
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            var gameDialog = new GameSettingsDialog();
+            if(gameDialog.ShowDialog() == true)
+            {
+                _gameDifficulty = gameDialog.SelectedDifficulty;
+                _gameSettings = GameSettingsUtils.GetGameSettingsFromDifficulty(_gameDifficulty);
+
+                SetupNewBoard();
+            }
         }
     }
 
