@@ -8,7 +8,6 @@ namespace Minesweeper
 {
     public struct BoardActionResult
     {
-        public int AdjacentMines { get; set; }
         public bool SteppedOnMine { get; set; }
     }
 
@@ -97,6 +96,11 @@ namespace Minesweeper
             }
         }
 
+        public Point AccessPoint(int x, int y)
+        {
+            return AccessPoint(new Coordinate(newX: x, newY: y));
+        }
+
         public Point AccessPoint(Coordinate coordinate)
         {
             try
@@ -159,10 +163,12 @@ namespace Minesweeper
         {
             Point point = AccessPoint(coordinate);
 
-            Console.WriteLine($"Attempting to open point {coordinate.x},{coordinate.y}");
             if (point.IsOpened)
             {
-                throw new ArgumentException("Cannot open point that is already opened!");
+                return new BoardActionResult
+                {
+                    SteppedOnMine = false
+                };
             }
 
             point.AdjacentMines = CalculateAdjacentMines(point.PointCoordinate);
@@ -181,7 +187,6 @@ namespace Minesweeper
 
             return new BoardActionResult
             {
-                AdjacentMines = point.AdjacentMines,
                 SteppedOnMine = point.HasMine
             };
         }

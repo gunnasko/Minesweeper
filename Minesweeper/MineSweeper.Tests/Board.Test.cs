@@ -72,7 +72,7 @@ namespace Minesweeper.Tests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void CannotReadMineOutsideBoardRange()
+        public void CannotAccessPointOutsideBoard()
         {
             int numOfColumns = 8;
             int numOfRows = 8;
@@ -80,7 +80,7 @@ namespace Minesweeper.Tests
             var board = new Board(numOfColumns, numOfRows, numOfMines);
 
             var outOfBoundCoordinate = new Coordinate(numOfColumns + 1, numOfRows + 1);
-            board.PointHasMine(outOfBoundCoordinate);
+            Point results = board.AccessPoint(outOfBoundCoordinate);
         }
 
         [TestMethod]
@@ -89,19 +89,22 @@ namespace Minesweeper.Tests
             Board testBoard = BoardUtils.CreateCheckerboardTestBoard(4,4);
 
             //Top row, expect three adjacent mines
-            BoardActionResult result = testBoard.OpenPoint(0, 1);
-            Assert.AreEqual(3, result.AdjacentMines);
-            Assert.AreEqual(false, result.SteppedOnMine);
+            testBoard.OpenPoint(0, 1);
+            Point point = testBoard.AccessPoint(0, 1);
+            Assert.AreEqual(3, point.AdjacentMines);
+            Assert.AreEqual(false, point.HasMine);
 
             //Top right corner, expect 2 adjacent mines
-            result = testBoard.OpenPoint(0, 3);
-            Assert.AreEqual(2, result.AdjacentMines);
-            Assert.AreEqual(false, result.SteppedOnMine);
+            testBoard.OpenPoint(0, 3);
+            point = testBoard.AccessPoint(0, 3);
+            Assert.AreEqual(2, point.AdjacentMines);
+            Assert.AreEqual(false, point.HasMine);
 
             //Middle, expect 4 adjacent mines
-            result = testBoard.OpenPoint(1, 2);
-            Assert.AreEqual(4, result.AdjacentMines);
-            Assert.AreEqual(false, result.SteppedOnMine);
+            testBoard.OpenPoint(1, 2);
+            point = testBoard.AccessPoint(1, 2);
+            Assert.AreEqual(4, point.AdjacentMines);
+            Assert.AreEqual(false, point.HasMine);
         }
 
         [TestMethod]
@@ -127,17 +130,6 @@ namespace Minesweeper.Tests
 
             //Check we have not opened the mine
             Assert.AreEqual(false, board.PointIsOpen(0, 3));
-
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void CannotOpenAnAlreadyOpenedPoint()
-        {
-            Board board = BoardUtils.CreateSingleMineTopRightBoard(4, 4);
-
-            board.OpenPoint(1, 1);
-            board.OpenPoint(1, 1);
         }
 
         [TestMethod]
