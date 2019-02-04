@@ -46,26 +46,29 @@ namespace Minesweeper
                     Button pointButton = new Button();
                     pointButton.Click += OnPointButtonClicked;
 
-                    Binding pointBinding = new Binding("IsOpened");
-                    pointBinding.Converter = new OpenedPointStyleConvert();
-                    pointBinding.Source = point;
-                    pointButton.SetBinding(Button.StyleProperty, pointBinding);
+                    //We bind IsOpened to set the style on pointbutton when it is opened.
+                    Binding isOpenedStyleBinding = new Binding("IsOpened");
+                    isOpenedStyleBinding.Converter = new OpenedPointStyleConvert();
+                    isOpenedStyleBinding.Source = point;
+                    pointButton.SetBinding(Button.StyleProperty, isOpenedStyleBinding);
 
 
-                    Binding pointBinding2 = new Binding("");
-                    pointBinding2.Source = point;
+                    //We add empty binding so that we can access all properties in Point in convert function
+                    Binding emptyContentBinding = new Binding("");
+                    emptyContentBinding.Source = point;
 
-                    Binding pointBinding3 = new Binding("IsOpened");
-                    pointBinding2.Source = point;
+                    //We add IsOpened binding so that convert is called everytime IsOpened changes
+                    Binding isOpenedContentBinding = new Binding("IsOpened");
+                    isOpenedContentBinding.Source = point;
 
-                    MultiBinding multiBinding = new MultiBinding();
+                    MultiBinding contentMultiBinding = new MultiBinding();
 
-                    multiBinding.Bindings.Add(pointBinding2);
-                    multiBinding.Bindings.Add(pointBinding3);
-                    multiBinding.Converter = new OpenedPointContentConvert();
-                    pointButton.SetBinding(Button.ContentProperty, multiBinding);
+                    contentMultiBinding.Bindings.Add(emptyContentBinding);
+                    contentMultiBinding.Bindings.Add(isOpenedContentBinding);
+                    contentMultiBinding.Converter = new OpenedPointContentConvert();
+                    pointButton.SetBinding(Button.ContentProperty, contentMultiBinding);
 
-
+                    //We save point data so we can access it in callbacks from button click.
                     pointButton.DataContext = point;
 
                     Grid.SetRow(pointButton, x);
@@ -81,16 +84,7 @@ namespace Minesweeper
             var point = button.DataContext as Point;
             try
             {
-                BoardActionResult result = _board.OpenPoint(point.PointCoordinate);
-
-               /* if (result.SteppedOnMine)
-                {
-                    button.Content = "X";
-                }
-                else if (result.AdjacentMines > 0)
-                {
-                    button.Content = result.AdjacentMines.ToString();
-                }*/
+                _board.OpenPoint(point.PointCoordinate);
             }
             catch (ArgumentException)
             {
@@ -116,8 +110,9 @@ namespace Minesweeper
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            var point = values[0] as Point;
-            if (!point.IsOpened)
+            var query = (from v in values where v.GetType() == typeof(Point) select v);
+            var point = query.First() as Point;
+            if (point == null || !point.IsOpened)
             {
                 return "";
             }
