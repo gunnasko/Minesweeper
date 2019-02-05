@@ -227,6 +227,7 @@ namespace Minesweeper
                         int.Parse(gameDialog.customMines.Text));
                 }
 
+                GameSettingsUtils.Save(_gameSettings);
                 SetupNewBoard();
             }
         }
