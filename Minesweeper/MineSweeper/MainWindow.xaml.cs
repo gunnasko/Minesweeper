@@ -24,26 +24,40 @@ namespace Minesweeper
         private Board _board;
         private GameSettings _gameSettings;
         private GameDifficulty _gameDifficulty = GameDifficulty.Beginner;
+        private GameScore _gameScore;
+
+        bool firstPointOpenedInGame = true;
 
         public MainWindow()
         {
             _gameSettings = GameSettingsUtils.GetGameSettingsFromDifficulty(_gameDifficulty);
+            _gameScore = new GameScore(new TimerAdapter());
             InitializeComponent();
 
-            //Currently use default values
             SetupNewBoard();
         }
 
         private void SetupNewBoard()
         {
             ResetBoardGrid();
-            StatusTextBox.Text = "Running...";
+            statusTextBox.Text = "Running...";
+
+            _gameScore.StopScoreCounter();
+            firstPointOpenedInGame = true;
+            _gameScore.ResetScore();
+
             _board = new Board(_gameSettings);
 
-            var binding = new Binding("NumberOfFlagsLeft");
-            binding.Source = _board;
-            binding.Mode = BindingMode.OneWay;
-            FlagLeftCounter.SetBinding(TextBox.TextProperty, binding);
+            var flagBinding = new Binding("NumberOfFlagsLeft");
+            flagBinding.Source = _board;
+            flagBinding.Mode = BindingMode.OneWay;
+            flagsLeftCounter.SetBinding(TextBox.TextProperty, flagBinding);
+
+            var scoreBinding = new Binding("Score");
+            scoreBinding.Source = _gameScore;
+            scoreBinding.Mode = BindingMode.OneWay;
+            scoreCounter.SetBinding(TextBox.TextProperty, scoreBinding);
+
 
             for (int x = 0; x < _board.RowSize; x++)
             {
@@ -104,8 +118,19 @@ namespace Minesweeper
             var button = (Button)sender;
             var point = button.DataContext as Point;
 
+            OpenPoint(point);
+        }
+
+        private void OpenPoint(Point point)
+        {
+            if (firstPointOpenedInGame)
+            {
+                _gameScore.StartScoreCounter();
+                firstPointOpenedInGame = false;
+            }
+
             BoardActionResult result = _board.OpenPoint(point.PointCoordinate);
-            
+
             if (result.SteppedOnMine)
             {
                 GameLost();
@@ -118,19 +143,21 @@ namespace Minesweeper
 
         private void GameLost()
         {
-            StatusTextBox.Text = "Lost!";
-            FreezeBoardGrid();
+            statusTextBox.Text = "Lost!";
+            FreezeScoreAndBoardGrid();
         }
 
         private void GameWon()
         {
-            StatusTextBox.Text = "Won!";
-            FreezeBoardGrid();
+            statusTextBox.Text = "Won!";
+            FreezeScoreAndBoardGrid();
         }
 
 
-        private void FreezeBoardGrid()
+        private void FreezeScoreAndBoardGrid()
         {
+            _gameScore.StopScoreCounter();
+
             foreach (var child in boardGrid.Children)
             {
                 var button = child as Button;
