@@ -26,29 +26,29 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Label Grid.Row="0" Grid.Column="0" Content="Difficulty" Margin="5,0,0,0"></Label>
-        <RadioButton Grid.Row="1" Grid.Column="0" Content="Beginner" GroupName="SelectedDifficulty" Checked="DifficultyRadioButton_Checked" HorizontalAlignment="Left" IsChecked="True" Margin="5,0,0,11"/>
-        <RadioButton Grid.Row="2" Grid.Column="0" Content="Intermediate" GroupName="SelectedDifficulty" Checked="DifficultyRadioButton_Checked" VerticalAlignment="Top" Margin="5,0,0,0"/>
-        <RadioButton Grid.Row="3" Grid.Column="0" Content="Expert" GroupName="SelectedDifficulty" Checked="DifficultyRadioButton_Checked" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,0,0,0"/>
-        <RadioButton x:Name="radioButton" Grid.Row="4" Grid.Column="0" Content="Custom" GroupName="SelectedDifficulty" Checked="DifficultyRadioButton_Checked" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,0,0,0"/>
+        <RadioButton x:Name="beginnerRadioButton" Grid.Row="1" Grid.Column="0" Content="Beginner" GroupName="SelectedDifficulty" Checked="DifficultyRadioButton_Checked" HorizontalAlignment="Left" IsChecked="True" Margin="5,0,0,11"/>
+        <RadioButton x:Name="intermediateRadioButton" Grid.Row="2" Grid.Column="0" Content="Intermediate" GroupName="SelectedDifficulty" Checked="DifficultyRadioButton_Checked" VerticalAlignment="Top" Margin="5,0,0,0"/>
+        <RadioButton x:Name="expertRadioButton" Grid.Row="3" Grid.Column="0" Content="Expert" GroupName="SelectedDifficulty" Checked="DifficultyRadioButton_Checked" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,0,0,0"/>
+        <RadioButton x:Name="customRadioButton" Grid.Row="4" Grid.Column="0" Content="Custom" GroupName="SelectedDifficulty" Checked="DifficultyRadioButton_Checked" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,0,0,0"/>
 
 
         <Label Grid.Row="0" Grid.Column="1" Content="Height"></Label>
         <Label Grid.Row="1" Grid.Column="1" Content="9" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         <Label Grid.Row="2" Grid.Column="1" Content="16" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         <Label Grid.Row="3" Grid.Column="1" Content="16" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-        <TextBox x:Name="customHeight" Grid.Row="4" Grid.Column="1" Text="9" VerticalAlignment="Top" Margin="0" Width="Auto" TextAlignment="Center" PreviewTextInput="NumericOnlyPreviewTextInput" IsReadOnly="{Binding IsChecked, Converter={StaticResource BoolFlipConverter}, ElementName=radioButton}"/>
+        <TextBox x:Name="customHeight" Grid.Row="4" Grid.Column="1" Text="9" VerticalAlignment="Top" Margin="0" Width="Auto" TextAlignment="Center" PreviewTextInput="NumericOnlyPreviewTextInput" IsReadOnly="{Binding IsChecked, Converter={StaticResource BoolFlipConverter}, ElementName=customRadioButton}"/>
 
         <Label Grid.Row="0" Grid.Column="2" Content="Width"></Label>
         <Label Grid.Row="1" Grid.Column="2" Content="9" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         <Label Grid.Row="2" Grid.Column="2" Content="16" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         <Label Grid.Row="3" Grid.Column="2" Content="30" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-        <TextBox x:Name="customWidth" Grid.Row="4" Grid.Column="2" Text="9" VerticalAlignment="Top" TextAlignment="Center" PreviewTextInput="NumericOnlyPreviewTextInput" IsReadOnly="{Binding IsChecked, Converter={StaticResource BoolFlipConverter}, ElementName=radioButton}"/>
+        <TextBox x:Name="customWidth" Grid.Row="4" Grid.Column="2" Text="9" VerticalAlignment="Top" TextAlignment="Center" PreviewTextInput="NumericOnlyPreviewTextInput" IsReadOnly="{Binding IsChecked, Converter={StaticResource BoolFlipConverter}, ElementName=customRadioButton}"/>
 
         <Label Grid.Row="0" Grid.Column="3" Content="Mines"></Label>
         <Label Grid.Row="1" Grid.Column="3" Content="10" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         <Label Grid.Row="2" Grid.Column="3" Content="40" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         <Label Grid.Row="3" Grid.Column="3" Content="99" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-        <TextBox x:Name="customMines" Grid.Row="4" Grid.Column="3" Text="10" VerticalAlignment="Top" Width="Auto" TextAlignment="Center" PreviewTextInput="NumericOnlyPreviewTextInput" IsReadOnly="{Binding IsChecked, Converter={StaticResource BoolFlipConverter}, ElementName=radioButton}"/>
+        <TextBox x:Name="customMines" Grid.Row="4" Grid.Column="3" Text="10" VerticalAlignment="Top" Width="Auto" TextAlignment="Center" PreviewTextInput="NumericOnlyPreviewTextInput" IsReadOnly="{Binding IsChecked, Converter={StaticResource BoolFlipConverter}, ElementName=customRadioButton}"/>
 
         <Button IsDefault="True" x:Name="saveButton" Grid.Row="5" Grid.Column="0" Content="Save" Click="SaveButton_Click" Margin="5"/>
         <Button IsCancel="True" x:Name="cancelButton" Grid.Row="5" Grid.Column="3" Content="Cancel" Margin="5"/>

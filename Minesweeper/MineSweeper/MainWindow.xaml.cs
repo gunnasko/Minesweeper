@@ -25,6 +25,7 @@ namespace Minesweeper
         private GameSettings _gameSettings;
         private GameDifficulty _gameDifficulty = GameDifficulty.Beginner;
         private GameScore _gameScore;
+        private GameSettings _fallbackSettings = GameSettingsUtils.GetGameSettingsFromDifficulty(GameDifficulty.Beginner);
 
         bool firstPointOpenedInGame = true;
 
@@ -46,7 +47,15 @@ namespace Minesweeper
             firstPointOpenedInGame = true;
             _gameScore.ResetScore();
 
-            _board = new Board(_gameSettings);
+            try
+            {
+                _board = new Board(_gameSettings);
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                MessageBox.Show($"{ex.Message}\nUsing fallback settings", "Bad settings!", MessageBoxButton.OK, MessageBoxImage.Error);
+                _board = new Board(_fallbackSettings);
+            }
 
             var flagBinding = new Binding("NumberOfFlagsLeft");
             flagBinding.Source = _board;
@@ -213,7 +222,7 @@ namespace Minesweeper
 
         private void SettingsMenu_Click(object sender, RoutedEventArgs e)
         {
-            var gameDialog = new GameSettingsDialog();
+            var gameDialog = new GameSettingsDialog(_gameSettings);
             if (gameDialog.ShowDialog() == true)
             {
                 _gameDifficulty = gameDialog.SelectedDifficulty;

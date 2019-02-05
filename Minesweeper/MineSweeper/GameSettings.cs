@@ -81,12 +81,8 @@ namespace Minesweeper
                 {
                     using (IsolatedStorageFileStream file = isoStore.OpenFile(GAME_SETTINGS_FILE_NAME, System.IO.FileMode.Open))
                     {
-                        using (StreamReader reader = new StreamReader(file))
-                        {
-                            var serializer = new DataContractSerializer(typeof(GameSettings));
-                            loadedSettings = (GameSettings)serializer.ReadObject(file);
-                        }
-
+                        var serializer = new DataContractSerializer(typeof(GameSettings));
+                        loadedSettings = (GameSettings)serializer.ReadObject(file);
                     }
                 }
                 catch (System.IO.FileNotFoundException)
