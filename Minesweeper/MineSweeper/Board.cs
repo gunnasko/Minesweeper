@@ -61,10 +61,10 @@ namespace Minesweeper
         {
         }
 
-        public Board(GameSettings gameSettings) :this(
-            gameSettings.BoardNumberOfColumns,
-            gameSettings.BoardNumberOfRows, 
-            gameSettings.BoardNumberOfMines)
+        public Board(BoardSettings boardSettings) :this(
+            boardSettings.BoardNumberOfColumns,
+            boardSettings.BoardNumberOfRows,
+            boardSettings.BoardNumberOfMines)
         {
         }
 

@@ -44,10 +44,20 @@ namespace Minesweeper
                     break;
             }
 
-            customHeight.Text = initialGameSettings.BoardNumberOfColumns.ToString();
-            customWidth.Text = initialGameSettings.BoardNumberOfRows.ToString();
-            customMines.Text = initialGameSettings.BoardNumberOfMines.ToString();
+            customHeight.Text = initialGameSettings.CustomBoardNumberOfColumns.ToString();
+            customWidth.Text = initialGameSettings.CustomBoardNumberOfRows.ToString();
+            customMines.Text = initialGameSettings.CustomBoardNumberOfMines.ToString();
         }
+
+        public GameSettings GetDialogGameSettings()
+        {
+            return new GameSettings(
+                int.Parse(customWidth.Text),
+                int.Parse(customHeight.Text), 
+                int.Parse(customMines.Text), 
+                SelectedDifficulty);
+        }
+
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {

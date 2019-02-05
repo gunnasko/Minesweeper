@@ -17,47 +17,66 @@ namespace Minesweeper
         Custom
     }
 
+    public struct BoardSettings
+    {
+        public int BoardNumberOfColumns { get; set; }
+        public int BoardNumberOfRows { get; set; }
+        public int BoardNumberOfMines { get; set; }
+
+        public BoardSettings(int columns, int rows, int mines)
+        {
+            BoardNumberOfColumns = columns;
+            BoardNumberOfRows = rows;
+            BoardNumberOfMines = mines;
+        }
+    }
+
     [DataContract]
-    public struct GameSettings
+    public class GameSettings
     {
         [DataMember]
-        public int BoardNumberOfColumns { get; set; }
+        public int CustomBoardNumberOfColumns { get; set; }
         [DataMember]
-        public int BoardNumberOfRows { get; set; }
+        public int CustomBoardNumberOfRows { get; set; }
         [DataMember]
-        public int BoardNumberOfMines { get; set; }
+        public int CustomBoardNumberOfMines { get; set; }
         [DataMember]
         public GameDifficulty BoardGameDifficulty { get; set; }
 
         public GameSettings(int columns, int rows, int mines, GameDifficulty gameDifficulty)
         {
-            BoardNumberOfColumns = columns;
-            BoardNumberOfRows = rows;
-            BoardNumberOfMines = mines;
+            CustomBoardNumberOfColumns = columns;
+            CustomBoardNumberOfRows = rows;
+            CustomBoardNumberOfMines = mines;
             BoardGameDifficulty = gameDifficulty;
         }
 
+        public BoardSettings CreateBoardSettings()
+        {
+            switch (BoardGameDifficulty)
+            {
+                case GameDifficulty.Beginner:
+                    return new BoardSettings(9, 9, 10);
+                case GameDifficulty.Intermediate:
+                    return new BoardSettings(16, 16, 40);
+                case GameDifficulty.Expert:
+                    return new BoardSettings(16, 30, 99);
+                case GameDifficulty.Custom:
+                    return new BoardSettings(CustomBoardNumberOfColumns, CustomBoardNumberOfRows, CustomBoardNumberOfMines);
+            }
+            return new BoardSettings(9, 9, 10);
+        }
+
+        public GameSettings() : this(9, 9, 10, GameDifficulty.Beginner)
+        {
+
+        }
     }
 
     public class GameSettingsUtils
     {
         const string GAME_SETTINGS_FILE_NAME = "settings.xml";
-        public static GameSettings GetGameSettingsFromDifficulty(GameDifficulty settings, int customColumn = 9, int customRows = 9, int customMines = 10)
-        {
-            switch (settings)
-            {
-                case GameDifficulty.Beginner:
-                    return new GameSettings(9, 9, 10, settings);
-                case GameDifficulty.Intermediate:
-                    return new GameSettings(16, 16, 40, settings);
-                case GameDifficulty.Expert:
-                    return new GameSettings(16, 30, 99, settings);
-                case GameDifficulty.Custom:
-                    return new GameSettings(customColumn, customRows, customMines, settings);
-            }
-            return new GameSettings(customColumn, customRows, customMines, settings);
-        }
-
+   
         public static void Save(GameSettings settingsToSave)
         {
             using (IsolatedStorageFile isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Domain | IsolatedStorageScope.Assembly, null, null))
@@ -72,7 +91,7 @@ namespace Minesweeper
 
         public static GameSettings Load()
         {
-            GameSettings defaultSettings = GetGameSettingsFromDifficulty(GameDifficulty.Beginner);
+            GameSettings defaultSettings = new GameSettings();
             GameSettings loadedSettings = defaultSettings;
 
             using (IsolatedStorageFile isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Domain | IsolatedStorageScope.Assembly, null, null))
