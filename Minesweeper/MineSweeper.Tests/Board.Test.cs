@@ -179,6 +179,55 @@ namespace Minesweeper.Tests
         }
 
         [TestMethod]
+        public void AddingFlagsShouldDecrementFlagsLeftCounter()
+        {
+            int numOfColumns = 8;
+            int numOfRows = 8;
+            int numOfMines = 10;
+            var board = new Board(numOfColumns, numOfRows, numOfMines);
+
+            Assert.AreEqual(numOfMines, board.NumberOfFlagsLeft);
+
+            board.FlagPoint(1, 0, true);
+            Assert.AreEqual(9, board.NumberOfFlagsLeft);
+            board.FlagPoint(1, 2, true);
+            Assert.AreEqual(8, board.NumberOfFlagsLeft);
+        }
+
+        [TestMethod]
+        public void RemovingFlagsShouldIncrementFlagsLeftCounter()
+        {
+            int numOfColumns = 8;
+            int numOfRows = 8;
+            int numOfMines = 10;
+            var board = new Board(numOfColumns, numOfRows, numOfMines);
+
+            board.FlagPoint(1, 0, true);
+            board.FlagPoint(1, 2, true);
+
+            board.FlagPoint(1, 0, false);
+            Assert.AreEqual(9, board.NumberOfFlagsLeft);
+
+            board.FlagPoint(1, 2, false);
+            Assert.AreEqual(10, board.NumberOfFlagsLeft);
+        }
+
+        [TestMethod]
+        public void FlagLeftCounterCanHaveNegativeValues()
+        {
+            int numOfColumns = 8;
+            int numOfRows = 8;
+            int numOfMines = 2;
+            var board = new Board(numOfColumns, numOfRows, numOfMines);
+
+            board.FlagPoint(1, 0, true);
+            board.FlagPoint(1, 1, true);
+            board.FlagPoint(1, 2, true);
+
+            Assert.AreEqual(-1, board.NumberOfFlagsLeft);
+        }
+
+        [TestMethod]
         public void CannotWinGameUntilAllPointsThatDoNotContainMinesAreOpen()
         {
             Board board = BoardUtils.CreateCheckerboardTestBoard(3, 3);
@@ -220,16 +269,5 @@ namespace Minesweeper.Tests
             Assert.IsTrue(board.PointIsOpen(1, 1));
 
         }
-
-
-
-
-
-
-
-
-
-
-
     }
 }

@@ -39,6 +39,12 @@ namespace Minesweeper
             ResetBoardGrid();
             StatusTextBox.Text = "Running...";
             _board = new Board(_gameSettings);
+
+            var binding = new Binding("NumberOfFlagsLeft");
+            binding.Source = _board;
+            binding.Mode = BindingMode.OneWay;
+            FlagLeftCounter.SetBinding(TextBox.TextProperty, binding);
+
             for (int x = 0; x < _board.RowSize; x++)
             {
                 boardGrid.RowDefinitions.Add(new RowDefinition());

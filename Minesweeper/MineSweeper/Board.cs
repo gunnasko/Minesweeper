@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,19 +12,21 @@ namespace Minesweeper
         public bool SteppedOnMine { get; set; }
     }
 
-    public class Board
+    public class Board : INotifyPropertyChanged
     {
         private Dictionary<Coordinate, Point> _points;
         private int _addedMines = 0;
+        private int _numberOfFlagsLeft = 0;
 
         public int ColumnSize { get; } //Y
         public int RowSize { get; } //X
         public int NumberOfMines { get; }
-
-
+        public int NumberOfFlagsLeft {get{return _numberOfFlagsLeft; }}
         Random _randomGenerator;
 
-        public Board(int boardColumnSize, int boardRowSize, int numOfMinesInGames)
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public Board(int boardColumnSize, int boardRowSize, int numOfMinesInGames, Dictionary<Coordinate, Point> points)
         {
             if (numOfMinesInGames <= 0)
             {
@@ -40,11 +43,16 @@ namespace Minesweeper
                 throw new ArgumentOutOfRangeException("Number of mines cannot be larger than possible number of points");
             }
 
-            _points = new Dictionary<Coordinate, Point>();
             ColumnSize = boardColumnSize;
             RowSize = boardRowSize;
             NumberOfMines = numOfMinesInGames;
+            _numberOfFlagsLeft = NumberOfMines;
+            _points = points;
+        }
 
+        public Board(int boardColumnSize, int boardRowSize, int numOfMinesInGames)
+            : this(boardColumnSize, boardRowSize, numOfMinesInGames, new Dictionary<Coordinate, Point>())
+        {
             _randomGenerator = new Random();
             FillPoints();
             AddMines();
@@ -53,21 +61,12 @@ namespace Minesweeper
         public Board() : this(8, 8, 10)
         {
         }
+
         public Board(GameSettings gameSettings) :this(
             gameSettings.BoardNumberOfColumns,
             gameSettings.BoardNumberOfRows, 
             gameSettings.BoardNumberOfMines)
         {
-
-        }
-
-        //Used for testing
-        public Board(int boardColumnSize, int boardRowSize, int numOfMinesInGames, Dictionary<Coordinate, Point> mockedDict)
-        {
-            ColumnSize = boardColumnSize;
-            RowSize = boardRowSize;
-            NumberOfMines = numOfMinesInGames;
-            _points = mockedDict;
         }
 
         private void FillPoints()
@@ -157,6 +156,27 @@ namespace Minesweeper
 
         public void FlagPoint(Coordinate coordinate, bool setFlag)
         {
+            if (AccessPoint(coordinate).IsFlagged == setFlag)
+            {
+                return;
+            }
+
+            if (setFlag)
+            {
+                _numberOfFlagsLeft--;
+            }
+            else
+            {
+                if (_numberOfFlagsLeft == NumberOfMines)
+                {
+                    //This exception is so rare I cannot create a test that exposes this.
+                    throw new InvalidOperationException("Cannot add more flags then mines!");
+                }
+                _numberOfFlagsLeft++;
+            }
+
+            OnPropertyChanged("NumberOfFlagsLeft");
+
             AccessPoint(coordinate).IsFlagged = setFlag;
         }
 
@@ -303,5 +323,10 @@ namespace Minesweeper
             var centerPoint = AccessPoint(sentralCoordinate);
             return adjacentMineCounter;
         }
+        private void OnPropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
     }
 }
