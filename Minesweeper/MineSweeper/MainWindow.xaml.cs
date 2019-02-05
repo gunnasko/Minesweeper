@@ -30,7 +30,7 @@ namespace Minesweeper
 
         public MainWindow()
         {
-            _gameSettings = GameSettingsUtils.GetGameSettingsFromDifficulty(_gameDifficulty);
+            _gameSettings = GameSettingsUtils.Load();
             _gameScore = new GameScore(new TimerAdapter());
             InitializeComponent();
 
