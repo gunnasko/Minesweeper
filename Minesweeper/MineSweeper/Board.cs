@@ -16,12 +16,11 @@ namespace Minesweeper
     {
         private Dictionary<Coordinate, Point> _points;
         private int _addedMines = 0;
-        private int _numberOfFlagsLeft = 0;
 
         public int ColumnSize { get; } //Y
         public int RowSize { get; } //X
         public int NumberOfMines { get; }
-        public int NumberOfFlagsLeft {get{return _numberOfFlagsLeft; }}
+        public int NumberOfFlagsLeft { get; private set; } = 0;
         Random _randomGenerator;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -46,7 +45,7 @@ namespace Minesweeper
             ColumnSize = boardColumnSize;
             RowSize = boardRowSize;
             NumberOfMines = numOfMinesInGames;
-            _numberOfFlagsLeft = NumberOfMines;
+            NumberOfFlagsLeft = NumberOfMines;
             _points = points;
         }
 
@@ -163,16 +162,16 @@ namespace Minesweeper
 
             if (setFlag)
             {
-                _numberOfFlagsLeft--;
+                NumberOfFlagsLeft--;
             }
             else
             {
-                if (_numberOfFlagsLeft == NumberOfMines)
+                if (NumberOfFlagsLeft == NumberOfMines)
                 {
                     //This exception is so rare I cannot create a test that exposes this.
                     throw new InvalidOperationException("Cannot add more flags then mines!");
                 }
-                _numberOfFlagsLeft++;
+                NumberOfFlagsLeft++;
             }
 
             OnPropertyChanged("NumberOfFlagsLeft");

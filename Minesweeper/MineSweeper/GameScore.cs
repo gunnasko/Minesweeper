@@ -5,25 +5,25 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using System.ComponentModel;
+using Minesweeper.Interfaces;
 
 namespace Minesweeper
 {
     public class GameScore : INotifyPropertyChanged, IDisposable
     {
         private const double TIMER_INTERVALL_IN_MS = 1000;
-        private Timer _scoreTimer;
-        private int _score;
+        private ITimer _scoreTimer;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public int Score { get { return _score; } }
+        public int Score { get; private set; }
 
-        public GameScore()
+        public GameScore(ITimer scoreTimer)
         {
             ResetScore();
-            _scoreTimer = new Timer(TIMER_INTERVALL_IN_MS);
+            _scoreTimer = scoreTimer;
+            _scoreTimer.Interval = TIMER_INTERVALL_IN_MS;
             _scoreTimer.Elapsed += OnTimedEvent;
-            _scoreTimer.AutoReset = true;
         }
 
         public void Dispose()
@@ -35,7 +35,8 @@ namespace Minesweeper
 
         public void ResetScore()
         {
-            _score = 0;
+            Score = 0;
+            OnPropertyChanged("Score");
         }
 
         public void StartScoreCounter()
@@ -50,7 +51,7 @@ namespace Minesweeper
 
         private void OnTimedEvent(object source, ElapsedEventArgs e)
         {
-            _score++;
+            Score++;
             OnPropertyChanged("Score");
         }
 

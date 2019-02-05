@@ -55,6 +55,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="TimerAdapter.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Page Include="GameSettingsDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -69,10 +72,12 @@
     </Compile>
     <Compile Include="Board.cs" />
     <Compile Include="Coordinate.cs" />
+    <Compile Include="GameScore.cs" />
     <Compile Include="GameSettings.cs" />
     <Compile Include="GameSettingsDialog.xaml.cs">
       <DependentUpon>GameSettingsDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\Timer.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
