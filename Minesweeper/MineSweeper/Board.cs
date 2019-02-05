@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace Minesweeper
         public bool SteppedOnMine { get; set; }
     }
 
-    public class Board
+    public class Board : INotifyPropertyChanged
     {
         private Dictionary<Coordinate, Point> _points;
         private int _addedMines = 0;
@@ -22,6 +23,8 @@ namespace Minesweeper
         public int NumberOfMines { get; }
         public int NumberOfFlagsLeft {get{return _numberOfFlagsLeft; }}
         Random _randomGenerator;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public Board(int boardColumnSize, int boardRowSize, int numOfMinesInGames, Dictionary<Coordinate, Point> points)
         {
@@ -172,6 +175,8 @@ namespace Minesweeper
                 _numberOfFlagsLeft++;
             }
 
+            OnPropertyChanged("NumberOfFlagsLeft");
+
             AccessPoint(coordinate).IsFlagged = setFlag;
         }
 
@@ -318,5 +323,10 @@ namespace Minesweeper
             var centerPoint = AccessPoint(sentralCoordinate);
             return adjacentMineCounter;
         }
+        private void OnPropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
     }
 }

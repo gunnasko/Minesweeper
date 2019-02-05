@@ -14,7 +14,10 @@
                 <MenuItem x:Name="settingsMenu" Header="_Settings" Click="SettingsMenu_Click"/>
             </Menu>
             <StackPanel>
-                <TextBox x:Name="StatusTextBox" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" HorizontalAlignment="Center"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBox x:Name="FlagLeftCounter" Height="23" VerticalAlignment="Top" Width="50" HorizontalAlignment="Center"/>
+                    <TextBox x:Name="StatusTextBox" Height="23" VerticalAlignment="Top" Width="120" HorizontalAlignment="Center" Margin="5,0,0,0"/>
+                </StackPanel>
                 <Grid x:Name="boardGrid" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Height="Auto" Width="Auto"/>
             </StackPanel>
 
