@@ -15,8 +15,9 @@
             </Menu>
             <StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <TextBox x:Name="FlagLeftCounter" Height="23" VerticalAlignment="Top" Width="50" HorizontalAlignment="Center"/>
-                    <TextBox x:Name="StatusTextBox" Height="23" VerticalAlignment="Top" Width="120" HorizontalAlignment="Center" Margin="5,0,0,0"/>
+                    <TextBox x:Name="flagsLeftCounter" Height="23" VerticalAlignment="Top" Width="50" HorizontalAlignment="Center"/>
+                    <TextBox x:Name="statusTextBox" Height="23" VerticalAlignment="Top" Width="120" HorizontalAlignment="Center" Margin="5,0,0,0"/>
+                    <TextBox x:Name="scoreCounter" Height="23" VerticalAlignment="Top" Width="50" HorizontalAlignment="Center" Margin="5,0,0,0"/>
                 </StackPanel>
                 <Grid x:Name="boardGrid" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Height="Auto" Width="Auto"/>
             </StackPanel>
