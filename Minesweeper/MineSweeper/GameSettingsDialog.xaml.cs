@@ -24,10 +24,40 @@ namespace Minesweeper
         public GameDifficulty SelectedDifficulty { get; set; }
         public bool CustomInputReadOnly { get; set; } = true;
 
-        public GameSettingsDialog()
+        public GameSettingsDialog(GameSettings initialGameSettings)
         {
             InitializeComponent();
+
+            switch(initialGameSettings.BoardGameDifficulty)
+            {
+                case GameDifficulty.Beginner:
+                    beginnerRadioButton.IsChecked = true;
+                    break;
+                case GameDifficulty.Intermediate:
+                    intermediateRadioButton.IsChecked = true;
+                    break;
+                case GameDifficulty.Expert:
+                    expertRadioButton.IsChecked = true;
+                    break;
+                case GameDifficulty.Custom:
+                    customRadioButton.IsChecked = true;
+                    break;
+            }
+
+            customHeight.Text = initialGameSettings.CustomBoardNumberOfColumns.ToString();
+            customWidth.Text = initialGameSettings.CustomBoardNumberOfRows.ToString();
+            customMines.Text = initialGameSettings.CustomBoardNumberOfMines.ToString();
         }
+
+        public GameSettings GetDialogGameSettings()
+        {
+            return new GameSettings(
+                int.Parse(customWidth.Text),
+                int.Parse(customHeight.Text), 
+                int.Parse(customMines.Text), 
+                SelectedDifficulty);
+        }
+
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {

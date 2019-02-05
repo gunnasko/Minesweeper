@@ -25,12 +25,13 @@ namespace Minesweeper
         private GameSettings _gameSettings;
         private GameDifficulty _gameDifficulty = GameDifficulty.Beginner;
         private GameScore _gameScore;
+        private GameSettings _fallBackSettings = new GameSettings();
 
         bool firstPointOpenedInGame = true;
 
         public MainWindow()
         {
-            _gameSettings = GameSettingsUtils.GetGameSettingsFromDifficulty(_gameDifficulty);
+            _gameSettings = GameSettingsUtils.Load();
             _gameScore = new GameScore(new TimerAdapter());
             InitializeComponent();
 
@@ -46,7 +47,15 @@ namespace Minesweeper
             firstPointOpenedInGame = true;
             _gameScore.ResetScore();
 
-            _board = new Board(_gameSettings);
+            try
+            {
+                _board = new Board(_gameSettings.CreateBoardSettings());
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                MessageBox.Show($"{ex.Message}\nUsing fallback settings", "Bad settings!", MessageBoxButton.OK, MessageBoxImage.Error);
+                _board = new Board(_fallBackSettings.CreateBoardSettings());
+            }
 
             var flagBinding = new Binding("NumberOfFlagsLeft");
             flagBinding.Source = _board;
@@ -213,20 +222,11 @@ namespace Minesweeper
 
         private void SettingsMenu_Click(object sender, RoutedEventArgs e)
         {
-            var gameDialog = new GameSettingsDialog();
+            var gameDialog = new GameSettingsDialog(_gameSettings);
             if (gameDialog.ShowDialog() == true)
             {
-                _gameDifficulty = gameDialog.SelectedDifficulty;
-                _gameSettings = GameSettingsUtils.GetGameSettingsFromDifficulty(_gameDifficulty);
-
-                if (_gameDifficulty == GameDifficulty.Custom)
-                {
-                    _gameSettings = GameSettingsUtils.GetGameSettingsFromDifficulty(_gameDifficulty,
-                        int.Parse(gameDialog.customWidth.Text),
-                        int.Parse(gameDialog.customHeight.Text),
-                        int.Parse(gameDialog.customMines.Text));
-                }
-
+                _gameSettings = gameDialog.GetDialogGameSettings();
+                GameSettingsUtils.Save(_gameSettings);
                 SetupNewBoard();
             }
         }
