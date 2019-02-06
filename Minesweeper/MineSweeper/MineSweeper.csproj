@@ -57,6 +57,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="HighScore.cs" />
+    <Compile Include="HighScoreRepository.cs" />
+    <Compile Include="Interfaces\IHighScoreRepository.cs" />
     <Compile Include="TimerAdapter.cs">
       <SubType>Component</SubType>
     </Compile>

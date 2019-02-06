@@ -65,6 +65,7 @@
     <Compile Include="Board.Test.cs" />
     <Compile Include="GameScore.Test.cs" />
     <Compile Include="HighScore.Test.cs" />
+    <Compile Include="HighScoreRepository.Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
