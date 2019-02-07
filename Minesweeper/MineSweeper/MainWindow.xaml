@@ -12,6 +12,7 @@
             <Menu DockPanel.Dock="Top">
                 <MenuItem x:Name="restartGameMenu" Header="_Restart Game" Click="RestartGameMenu_Click"/>
                 <MenuItem x:Name="settingsMenu" Header="_Settings" Click="SettingsMenu_Click"/>
+                <MenuItem x:Name="highScoreMenu" Header="_High Score" Click="HighScoreMenu_Click"/>
             </Menu>
             <StackPanel>
                 <StackPanel Orientation="Horizontal">
