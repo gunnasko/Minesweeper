@@ -25,6 +25,7 @@ namespace Minesweeper
         private GameSettings _gameSettings;
         private GameScore _gameScore;
         private GameSettings _fallBackSettings = new GameSettings();
+        private HighScores _highScores = new HighScores();
 
         bool firstPointOpenedInGame = true;
 
@@ -32,6 +33,7 @@ namespace Minesweeper
         {
             _gameSettings = GameSettingsUtils.Load();
             _gameScore = new GameScore(new TimerAdapter());
+            _highScores = HighScoreRepository.Load();
             InitializeComponent();
 
             SetupNewBoard();
@@ -147,6 +149,7 @@ namespace Minesweeper
             {
                 GameWon();
             }
+
         }
 
         private void GameLost()
@@ -159,6 +162,19 @@ namespace Minesweeper
         {
             statusTextBox.Text = "Won!";
             FreezeScoreAndBoardGrid();
+
+            if (_gameSettings.BoardGameDifficulty != GameDifficulty.Custom)
+            {
+                _highScores = HighScoreRepository.Load();
+                HighScoreEntry entry = new HighScoreEntry
+                {
+                    Name = "TestName",
+                    Score = _gameScore.Score,
+                    Date = DateTime.Now
+                };
+                _highScores.AddHighScore(entry, _gameSettings.BoardGameDifficulty);
+                HighScoreRepository.Save(_highScores);
+            }
         }
 
 
@@ -232,7 +248,7 @@ namespace Minesweeper
 
         private void HighScoreMenu_Click(object sender, RoutedEventArgs e)
         {
-            var highScoreWindow = new HighScoreWindow();
+            var highScoreWindow = new HighScoreWindow(_highScores);
             highScoreWindow.ShowDialog();
         }
     }

@@ -64,7 +64,6 @@
     <Compile Include="HighScoreWindow.xaml.cs">
       <DependentUpon>HighScoreWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\IHighScoreRepository.cs" />
     <Compile Include="TimerAdapter.cs">
       <SubType>Component</SubType>
     </Compile>

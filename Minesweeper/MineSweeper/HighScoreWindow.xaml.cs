@@ -20,25 +20,30 @@ namespace Minesweeper
     /// </summary>
     public partial class HighScoreWindow : Window
     {
-        public HighScoreWindow()
+        public HighScoreWindow(HighScores highScores)
         {
             InitializeComponent();
 
-            LoadHighScores();
+            ShowHighScores(highScores);
         }
 
-        private void LoadHighScores()
+        private void ShowHighScores(HighScores highScores)
         {
-            var highscoresRepo = new HighScoreRepository();
+
+            //Testing code
+            /*
             HighScores highscores = null;
             using (var fs = new FileStream("TestResources/TestHighscores.xml", FileMode.Open))
             {
-                highscores = highscoresRepo.LoadFromStream(fs);
+                highscores = HighScoreRepository.LoadFromStream(fs);
             }
+            */
 
-            List<HighScoreEntry> beginnerScores = highscores.GetTopTen(GameDifficulty.Beginner);
-            List<HighScoreEntry> intermediateScores = highscores.GetTopTen(GameDifficulty.Intermediate);
-            List<HighScoreEntry> expertScores = highscores.GetTopTen(GameDifficulty.Expert);
+            //HighScores highscores = HighScoreRepository.Load();
+
+            List<HighScoreEntry> beginnerScores = highScores.GetTopTen(GameDifficulty.Beginner);
+            List<HighScoreEntry> intermediateScores = highScores.GetTopTen(GameDifficulty.Intermediate);
+            List<HighScoreEntry> expertScores = highScores.GetTopTen(GameDifficulty.Expert);
 
             beginnerTopTen.HighScoreSource = beginnerScores;
             intermediateTopTen.HighScoreSource = intermediateScores;

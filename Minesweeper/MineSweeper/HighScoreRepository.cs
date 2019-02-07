@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace Minesweeper
 {
-    public class HighScoreRepository : IHighScoreRepository
+    static public class HighScoreRepository
     {
         const string HIGH_SCORE_PATH = "highscores.xml";
-        public HighScores Load()
+        static public HighScores Load()
         {
             using (IsolatedStorageFile isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Domain | IsolatedStorageScope.Assembly, null, null))
             {
@@ -31,7 +31,7 @@ namespace Minesweeper
             }
         }
 
-        public void Save(HighScores highscores)
+        static public void Save(HighScores highscores)
         {
             using (IsolatedStorageFile isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Domain | IsolatedStorageScope.Assembly, null, null))
             {
@@ -42,13 +42,13 @@ namespace Minesweeper
             }
         }
 
-        public HighScores LoadFromStream(Stream stream)
+        static public HighScores LoadFromStream(Stream stream)
         {
             var serializer = new DataContractSerializer(typeof(HighScores));
             return (HighScores)serializer.ReadObject(stream);
         }
 
-        public void SaveToStream(HighScores highscores, Stream stream)
+        static public void SaveToStream(HighScores highscores, Stream stream)
         {
             var serializer = new DataContractSerializer(typeof(HighScores));
             serializer.WriteObject(stream, highscores);

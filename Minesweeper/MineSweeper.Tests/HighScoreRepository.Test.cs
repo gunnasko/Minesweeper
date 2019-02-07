@@ -30,12 +30,11 @@ namespace Minesweeper.Tests
             }, GameDifficulty.Expert);
 
 
-            var repository = new HighScoreRepository();
             var ms = new MemoryStream();
-            repository.SaveToStream(testHighscores, ms);
+            HighScoreRepository.SaveToStream(testHighscores, ms);
 
             ms.Position = 0;
-            var loadedHighScores = repository.LoadFromStream(ms);
+            var loadedHighScores = HighScoreRepository.LoadFromStream(ms);
 
             VerifyResults(testHighscores, loadedHighScores, GameDifficulty.Beginner);
             VerifyResults(testHighscores, loadedHighScores, GameDifficulty.Intermediate);
