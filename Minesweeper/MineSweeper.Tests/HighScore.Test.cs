@@ -249,6 +249,22 @@ namespace Minesweeper.Tests
             Assert.IsTrue(highscore.IsScoreTopTenCandidate(5, GameDifficulty.Beginner));
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ShouldNotBeAbleGetHighscoreFromCustomDifficulty()
+        {
+            var highscore = new HighScores();
+            highscore.GetTopTen(GameDifficulty.Custom);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ShouldNotBeAbleToProbeTopTenFromCustomDifficulty()
+        {
+            var highscore = new HighScores();
+            highscore.IsScoreTopTenCandidate(0, GameDifficulty.Custom);
+        }
+
 
     }
 }
