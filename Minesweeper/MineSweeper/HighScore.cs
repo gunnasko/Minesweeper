@@ -46,6 +46,19 @@ namespace Minesweeper
             }
         }
 
+        public bool IsScoreInTopTen(int scoreCandidate, GameDifficulty scoreDifficulty)
+        {
+            try
+            {
+                var topTen = GetTopTen(scoreDifficulty);
+                return scoreCandidate <= topTen.Last().Score;
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new ArgumentException("Game difficulty cannot be custom!");
+            }
+        }
+
         public List<HighScoreEntry> GetTopTen(GameDifficulty highScoreDifficulty)
         {
             var query = from h in _highScores[highScoreDifficulty] orderby h.Score select h;

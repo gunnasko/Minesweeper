@@ -131,6 +131,47 @@ namespace Minesweeper.Tests
             Assert.AreEqual("Frank", highScoreSorted[9].Name);
         }
 
+        [TestMethod]
+        public void HighscoreTopTenShouldPrioritizeNewestDateOnEqualScore()
+        {
+            var highscore = new HighScores();
+            highscore.AddHighScore(new HighScoreEntry
+            {
+                Name = "Sammy",
+                Score = 50,
+                Date = DateTime.Parse("01/11/2001 07:30:15")
+            }, GameDifficulty.Beginner);
+
+            highscore.AddHighScore(new HighScoreEntry
+            {
+                Name = "Ingrid",
+                Score = 50,
+                Date = DateTime.Parse("01/11/2001 07:25:15")
+
+            }, GameDifficulty.Beginner);
+
+            highscore.AddHighScore(new HighScoreEntry
+            {
+                Name = "Joe",
+                Score = 50,
+                Date = DateTime.Parse("02/11/2001 07:25:15")
+            }, GameDifficulty.Beginner);
+                
+            highscore.AddHighScore(new HighScoreEntry
+            {
+                Name = "Bob",
+                Score = 51,
+                Date = DateTime.Parse("02/11/2001 07:25:15")
+            }, GameDifficulty.Beginner);
+
+            var highScoreSorted = highscore.GetTopTen(GameDifficulty.Beginner);
+            Assert.AreEqual(4, highScoreSorted.Count);
+            Assert.AreEqual("Joe", highScoreSorted[0].Name);
+            Assert.AreEqual("Ingrid", highScoreSorted[1].Name);
+            Assert.AreEqual("Sammy", highScoreSorted[2].Name);
+            Assert.AreEqual("Bob", highScoreSorted[3].Name);
+        }
+
 
     }
 }
