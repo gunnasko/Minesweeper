@@ -23,7 +23,6 @@ namespace Minesweeper
     {
         private Board _board;
         private GameSettings _gameSettings;
-        private GameDifficulty _gameDifficulty = GameDifficulty.Beginner;
         private GameScore _gameScore;
         private GameSettings _fallBackSettings = new GameSettings();
 
@@ -229,6 +228,12 @@ namespace Minesweeper
                 GameSettingsUtils.Save(_gameSettings);
                 SetupNewBoard();
             }
+        }
+
+        private void HighScoreMenu_Click(object sender, RoutedEventArgs e)
+        {
+            var highScoreWindow = new HighScoreWindow();
+            highScoreWindow.ShowDialog();
         }
     }
 

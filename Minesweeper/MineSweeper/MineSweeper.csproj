@@ -58,11 +58,25 @@
     </ApplicationDefinition>
     <Compile Include="HighScore.cs" />
     <Compile Include="HighScoreRepository.cs" />
+    <Compile Include="HighScoreTopTenControl.xaml.cs">
+      <DependentUpon>HighScoreTopTenControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="HighScoreWindow.xaml.cs">
+      <DependentUpon>HighScoreWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Interfaces\IHighScoreRepository.cs" />
     <Compile Include="TimerAdapter.cs">
       <SubType>Component</SubType>
     </Compile>
     <Page Include="GameSettingsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HighScoreTopTenControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HighScoreWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -113,6 +127,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TestResources\TestHighscores.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

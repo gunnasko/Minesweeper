@@ -17,9 +17,16 @@ namespace Minesweeper
         {
             using (IsolatedStorageFile isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Domain | IsolatedStorageScope.Assembly, null, null))
             {
-                using (IsolatedStorageFileStream file = isoStore.OpenFile(HIGH_SCORE_PATH, System.IO.FileMode.Open))
+                try
                 {
-                    return LoadFromStream(file);
+                    using (IsolatedStorageFileStream file = isoStore.OpenFile(HIGH_SCORE_PATH, System.IO.FileMode.Open))
+                    {
+                        return LoadFromStream(file);
+                    }
+                }
+                catch (FileNotFoundException)
+                {
+                    return new HighScores();
                 }
             }
         }

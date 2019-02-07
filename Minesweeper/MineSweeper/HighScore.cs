@@ -7,10 +7,15 @@ using System.Threading.Tasks;
 
 namespace Minesweeper
 {
+    [DataContract]
     public struct HighScoreEntry
     {
+        public int Placement { get; set; }
+        [DataMember]
         public string Name { get; set; }
+        [DataMember]
         public int Score { get; set; }
+        [DataMember]
         public DateTime Date { get; set; }
     }
 
@@ -44,7 +49,13 @@ namespace Minesweeper
         public List<HighScoreEntry> GetTopTen(GameDifficulty highScoreDifficulty)
         {
             var query = from h in _highScores[highScoreDifficulty] orderby h.Score select h;
-            return query.Take(10).ToList();
+            HighScoreEntry [] topTenList = query.Take(10).ToArray();
+            //Sett placement as one indexed
+            for (int i = 0; i < topTenList.Length; i++)
+            {
+                topTenList[i].Placement = i + 1;
+            }
+            return new List<HighScoreEntry>(topTenList);
         }
 
     }
