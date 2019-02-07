@@ -146,7 +146,7 @@ namespace Minesweeper.Tests
             {
                 Name = "Ingrid",
                 Score = 50,
-                Date = DateTime.Parse("01/11/2001 07:25:15")
+                Date = DateTime.Parse("01/11/2001 07:30:10")
 
             }, GameDifficulty.Beginner);
 
@@ -154,7 +154,7 @@ namespace Minesweeper.Tests
             {
                 Name = "Joe",
                 Score = 50,
-                Date = DateTime.Parse("02/11/2001 07:25:15")
+                Date = DateTime.Parse("02/11/2001 07:30:10")
             }, GameDifficulty.Beginner);
                 
             highscore.AddHighScore(new HighScoreEntry
@@ -167,9 +167,86 @@ namespace Minesweeper.Tests
             var highScoreSorted = highscore.GetTopTen(GameDifficulty.Beginner);
             Assert.AreEqual(4, highScoreSorted.Count);
             Assert.AreEqual("Joe", highScoreSorted[0].Name);
-            Assert.AreEqual("Ingrid", highScoreSorted[1].Name);
-            Assert.AreEqual("Sammy", highScoreSorted[2].Name);
+            Assert.AreEqual("Sammy", highScoreSorted[1].Name);
+            Assert.AreEqual("Ingrid", highScoreSorted[2].Name);
             Assert.AreEqual("Bob", highScoreSorted[3].Name);
+        }
+
+        [TestMethod]
+        public void ShouldBeAbleToCheckIfAScoreIsANewHighScore()
+        {
+            var highscore = new HighScores();
+            highscore.AddHighScore(new HighScoreEntry
+            {
+                Name = "Andy",
+                Score = 1
+            }, GameDifficulty.Beginner);
+
+            highscore.AddHighScore(new HighScoreEntry
+            {
+                Name = "Sam",
+                Score = 2
+            }, GameDifficulty.Beginner);
+
+            highscore.AddHighScore(new HighScoreEntry
+            {
+                Name = "Nina",
+                Score = 3
+            }, GameDifficulty.Beginner);
+
+            highscore.AddHighScore(new HighScoreEntry
+            {
+                Name = "Jack",
+                Score = 4
+            }, GameDifficulty.Beginner);
+
+            highscore.AddHighScore(new HighScoreEntry
+            {
+                Name = "Sammy",
+                Score = 5
+            }, GameDifficulty.Beginner);
+
+            highscore.AddHighScore(new HighScoreEntry
+            {
+                Name = "Ingrid",
+                Score = 6
+            }, GameDifficulty.Beginner);
+
+            highscore.AddHighScore(new HighScoreEntry
+            {
+                Name = "Sigrid",
+                Score = 7
+            }, GameDifficulty.Beginner);
+
+            highscore.AddHighScore(new HighScoreEntry
+            {
+                Name = "Jens",
+                Score = 8
+            }, GameDifficulty.Beginner);
+
+            highscore.AddHighScore(new HighScoreEntry
+            {
+                Name = "Elizabeth",
+                Score = 9
+            }, GameDifficulty.Beginner);
+
+            highscore.AddHighScore(new HighScoreEntry
+            {
+                Name = "Frank",
+                Score = 10
+            }, GameDifficulty.Beginner);
+
+            highscore.AddHighScore(new HighScoreEntry
+            {
+                Name = "Bob",
+                Score = 11
+            }, GameDifficulty.Beginner);
+
+            Assert.IsFalse(highscore.IsScoreTopTenCandidate(11, GameDifficulty.Beginner));
+            Assert.IsFalse(highscore.IsScoreTopTenCandidate(12, GameDifficulty.Beginner));
+
+            Assert.IsTrue(highscore.IsScoreTopTenCandidate(10, GameDifficulty.Beginner));
+            Assert.IsTrue(highscore.IsScoreTopTenCandidate(5, GameDifficulty.Beginner));
         }
 
 

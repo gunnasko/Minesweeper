@@ -46,7 +46,7 @@ namespace Minesweeper
             }
         }
 
-        public bool IsScoreInTopTen(int scoreCandidate, GameDifficulty scoreDifficulty)
+        public bool IsScoreTopTenCandidate(int scoreCandidate, GameDifficulty scoreDifficulty)
         {
             try
             {
@@ -61,14 +61,24 @@ namespace Minesweeper
 
         public List<HighScoreEntry> GetTopTen(GameDifficulty highScoreDifficulty)
         {
-            var query = from h in _highScores[highScoreDifficulty] orderby h.Score select h;
-            HighScoreEntry [] topTenList = query.Take(10).ToArray();
+            HighScoreEntry[] topTenList = null;
+            try
+            {
+                var query = _highScores[highScoreDifficulty].OrderBy(h => h.Score).ThenByDescending(n => n.Date);
+                topTenList = query.Take(10).ToArray();
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new ArgumentException("Game difficulty cannot be custom!");
+            }
+
             //Sett placement as one indexed
             for (int i = 0; i < topTenList.Length; i++)
             {
                 topTenList[i].Placement = i + 1;
             }
             return new List<HighScoreEntry>(topTenList);
+
         }
 
     }
