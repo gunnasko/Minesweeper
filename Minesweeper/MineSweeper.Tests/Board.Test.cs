@@ -154,16 +154,37 @@ namespace Minesweeper.Tests
         [TestMethod]
         public void CanFlagAPointOnBoard()
         {
-            int numOfColumns = 8;
-            int numOfRows = 8;
-            int numOfMines = 10;
-            var board = new Board(numOfColumns, numOfRows, numOfMines);
+            var board = new Board(8, 8, 10);
 
             board.FlagPoint(1, 1, true);
             Assert.AreEqual(true, board.PointIsFlagged(1, 1));
 
             board.FlagPoint(1, 1, false);
             Assert.AreEqual(false, board.PointIsFlagged(1, 1));
+        }
+
+        [TestMethod]
+        public void OpenedPointsAreAutomaticallyDeflagged()
+        {
+            var board = new Board(8, 8, 10);
+
+            board.FlagPoint(1, 1, true);
+            board.OpenPoint(1, 1);
+
+            Assert.IsFalse(board.PointIsFlagged(1, 1));
+            Assert.AreEqual(10, board.NumberOfFlagsLeft);
+        }
+
+        [TestMethod]
+        public void CannotFlagPointsThatAreOpened()
+        {
+            var board = new Board(8, 8, 10);
+
+            board.OpenPoint(1, 1);
+            board.FlagPoint(1, 1, true);
+
+            Assert.IsFalse(board.PointIsFlagged(1, 1));
+            Assert.AreEqual(10, board.NumberOfFlagsLeft);
         }
 
         [TestMethod]
