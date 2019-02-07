@@ -51,6 +51,10 @@ namespace Minesweeper
             try
             {
                 var topTen = GetTopTen(scoreDifficulty);
+                if (topTen.Count < 10)
+                {
+                    return true;
+                }
                 return scoreCandidate <= topTen.Last().Score;
             }
             catch (KeyNotFoundException)

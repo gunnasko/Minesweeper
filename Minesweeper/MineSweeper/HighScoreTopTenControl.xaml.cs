@@ -24,15 +24,23 @@ namespace Minesweeper
         public HighScoreTopTenControl()
         {
             InitializeComponent();
+            this.DataContext = this;
         }
 
         public static readonly DependencyProperty HighScoreSourceProperty = DependencyProperty.Register("HighScoreSource", typeof(IEnumerable), typeof(HighScoreTopTenControl));
+        public static readonly DependencyProperty DifficultyNameProperty = DependencyProperty.Register("DifficultyName", typeof(string), typeof(HighScoreTopTenControl));
 
         public IEnumerable HighScoreSource
         {
             get { return (IEnumerable)GetValue(HighScoreSourceProperty); }
             set { SetValue(HighScoreSourceProperty, value); }
         }
+        public string DifficultyName
+        {
+            get { return (string)GetValue(DifficultyNameProperty); }
+            set { SetValue(DifficultyNameProperty, value); }
+        }
+
 
     }
 }

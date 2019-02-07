@@ -7,16 +7,19 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <ListView ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:HighScoreTopTenControl}}, Path=HighScoreSource, Mode=OneWay}">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn DisplayMemberBinding="{Binding Placement}" Header="#"/>
-                    <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name"/>
-                    <GridViewColumn DisplayMemberBinding="{Binding Score}" Header="Score"/>
-                    <GridViewColumn DisplayMemberBinding="{Binding Date}" Header="Date"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <StackPanel>
+            <Label Content="{Binding DifficultyName}" VerticalAlignment="Top"/>
+            <ListView ItemsSource="{Binding HighScoreSource}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn DisplayMemberBinding="{Binding Placement}" Header="#"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding Score}" Header="Score"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding Date}" Header="Date"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </StackPanel>
     </Grid>
 
 </UserControl>

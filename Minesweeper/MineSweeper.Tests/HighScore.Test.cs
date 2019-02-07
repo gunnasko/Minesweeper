@@ -173,7 +173,21 @@ namespace Minesweeper.Tests
         }
 
         [TestMethod]
-        public void ShouldBeAbleToCheckIfAScoreIsANewHighScore()
+        public void CheckingTopTenShouldAlwaysReturnTrueIfTopTenIsNotFull()
+        {
+            var highscore = new HighScores();
+            highscore.AddHighScore(new HighScoreEntry
+            {
+                Name = "Andy",
+                Score = 5
+            }, GameDifficulty.Beginner);
+
+            Assert.IsTrue(highscore.IsScoreTopTenCandidate(11, GameDifficulty.Beginner));
+            Assert.IsTrue(highscore.IsScoreTopTenCandidate(1, GameDifficulty.Beginner));
+        }
+
+        [TestMethod]
+        public void CheckingHighscoreShouldOnlyCheckTopTenInHighscore()
         {
             var highscore = new HighScores();
             highscore.AddHighScore(new HighScoreEntry
@@ -230,11 +244,17 @@ namespace Minesweeper.Tests
                 Score = 9
             }, GameDifficulty.Beginner);
 
+            Assert.IsTrue(highscore.IsScoreTopTenCandidate(9, GameDifficulty.Beginner));
+            Assert.IsTrue(highscore.IsScoreTopTenCandidate(10, GameDifficulty.Beginner));
+
             highscore.AddHighScore(new HighScoreEntry
             {
                 Name = "Frank",
                 Score = 10
             }, GameDifficulty.Beginner);
+
+            Assert.IsTrue(highscore.IsScoreTopTenCandidate(10, GameDifficulty.Beginner));
+            Assert.IsFalse(highscore.IsScoreTopTenCandidate(11, GameDifficulty.Beginner));
 
             highscore.AddHighScore(new HighScoreEntry
             {

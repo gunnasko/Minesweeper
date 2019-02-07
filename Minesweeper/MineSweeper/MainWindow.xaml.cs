@@ -139,8 +139,8 @@ namespace Minesweeper
                 firstPointOpenedInGame = false;
             }
 
-            BoardActionResult result = _board.OpenPoint(point.PointCoordinate);
 
+            BoardActionResult result = _board.OpenPoint(point.PointCoordinate);
             if (result.SteppedOnMine)
             {
                 GameLost();
@@ -149,7 +149,6 @@ namespace Minesweeper
             {
                 GameWon();
             }
-
         }
 
         private void GameLost()
@@ -163,17 +162,26 @@ namespace Minesweeper
             statusTextBox.Text = "Won!";
             FreezeScoreAndBoardGrid();
 
-            if (_gameSettings.BoardGameDifficulty != GameDifficulty.Custom)
+            int scoreCandidate = new Random().Next(500);//_gameScore.Score;
+            GameDifficulty difficulty = _gameSettings.BoardGameDifficulty;
+
+            if (_gameSettings.BoardGameDifficulty != GameDifficulty.Custom
+                && _highScores.IsScoreTopTenCandidate(scoreCandidate, difficulty))
             {
-                _highScores = HighScoreRepository.Load();
-                HighScoreEntry entry = new HighScoreEntry
+                var nameEntryDialog = new SetHighScoreNameDialog(scoreCandidate);
+                if (nameEntryDialog.ShowDialog() == true)
                 {
-                    Name = "TestName",
-                    Score = _gameScore.Score,
-                    Date = DateTime.Now
-                };
-                _highScores.AddHighScore(entry, _gameSettings.BoardGameDifficulty);
-                HighScoreRepository.Save(_highScores);
+                    _highScores = HighScoreRepository.Load();
+                    HighScoreEntry entry = new HighScoreEntry
+                    {
+                        Name = nameEntryDialog.nameInput.Text,
+                        Score = scoreCandidate,
+                        Date = DateTime.Now
+                    };
+                    _highScores.AddHighScore(entry, difficulty);
+                    HighScoreRepository.Save(_highScores);
+                }
+
             }
         }
 
