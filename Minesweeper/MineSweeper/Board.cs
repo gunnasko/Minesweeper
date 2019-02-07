@@ -14,7 +14,7 @@ namespace Minesweeper
 
     public class Board : INotifyPropertyChanged
     {
-        private Dictionary<Coordinate, Point> _points;
+        private readonly Dictionary<Coordinate, Point> _points;
         private int _addedMines = 0;
 
         public int ColumnSize { get; } //Y
@@ -155,7 +155,8 @@ namespace Minesweeper
 
         public void FlagPoint(Coordinate coordinate, bool setFlag)
         {
-            if (AccessPoint(coordinate).IsFlagged == setFlag)
+            if (PointIsOpen(coordinate) || 
+                AccessPoint(coordinate).IsFlagged == setFlag)
             {
                 return;
             }
@@ -220,6 +221,8 @@ namespace Minesweeper
 
             point.AdjacentMines = CalculateAdjacentMines(point.PointCoordinate);
 
+            //Deflag point when opened. Do this before opened.
+            FlagPoint(coordinate, false);
             point.IsOpened = true;
 
             if (!point.HasMine)
